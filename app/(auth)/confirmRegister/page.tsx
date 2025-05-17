@@ -1,6 +1,6 @@
 import Form from './form';
 
-export default function LoginPage() {
+export default function ConfirmRegisterPage() {
  
  return (
    <Form /> 

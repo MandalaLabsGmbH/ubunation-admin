@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { FormEvent } from 'react';
 import Link from 'next/link';
+import router from 'next/navigation';
 
 export default function Form() {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -19,6 +20,7 @@ export default function Form() {
             }),
         });
         console.log(response);
+        router.redirect('confirmRegister')
      }
     return (
         <form onSubmit={handleSubmit}>
