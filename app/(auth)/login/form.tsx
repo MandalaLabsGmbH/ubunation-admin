@@ -5,11 +5,26 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { FormEvent } from 'react';
+import { signIn } from 'next-auth/react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 export default function Form() {
+    const router = useRouter();
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        const formData = new FormData(e.currentTarget);
         e.preventDefault();
+        const response = await signIn("credentials", {
+            username: formData.get('email'),
+            password: formData.get('password'),
+            redirect: false,
+        })
+        console.log(response);
+        if(!response?.error){
+            router.push("/")
+            router.refresh();
+        }
+
      }
  return (
     <form onSubmit={handleSubmit}>

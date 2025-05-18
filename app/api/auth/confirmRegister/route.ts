@@ -72,6 +72,7 @@ export async function POST (request: Request) {
     // write POST request to User table in API here
     await cognitoConfirm(email, userPool, confirmCode);
     
+    
  }
 catch (e) {
     console.log({ e });

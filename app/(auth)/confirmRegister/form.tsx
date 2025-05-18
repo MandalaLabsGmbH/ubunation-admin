@@ -5,87 +5,100 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { FormEvent } from 'react';
-import axios from 'axios';
-import {
-	CognitoUserPool,
-    CognitoUser,
-    CookieStorage,
-    AuthenticationDetails
-} from 'amazon-cognito-identity-js';
-import router from 'next/navigation';
+// import axios from 'axios';
+// import {
+// 	CognitoUserPool,
+//     CognitoUser,
+//     CookieStorage,
+//     AuthenticationDetails
+// } from 'amazon-cognito-identity-js';
+import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function authenticateUser (email: any, password: any) {
+// async function authenticateUser (email: any, password: any) {
 
-    const poolId = "eu-central-1_flxgJwy19";
-    const clientId = "3habrhuviqskit3ma595m5dp0b";
+//     const poolId = "eu-central-1_flxgJwy19";
+//     const clientId = "3habrhuviqskit3ma595m5dp0b";
 
-    console.log(poolId, clientId);
+//     console.log(poolId, clientId);
 
-    const poolData = {
-        UserPoolId: poolId ? poolId : 'no Cognito poolId found', // Your user pool id here
-        ClientId: clientId ? clientId : 'no Cognito clientId found',
-        Storage: new CookieStorage({domain: 'localhost', secure: false}) // Your client id here
-    };
+//     const poolData = {
+//         UserPoolId: poolId ? poolId : 'no Cognito poolId found', // Your user pool id here
+//         ClientId: clientId ? clientId : 'no Cognito clientId found',
+//         Storage: new CookieStorage({domain: 'localhost', secure: false}) // Your client id here
+//     };
 
-    const authenticationData = {
-        Username: email,
-        Password: password,
-    };
-    const authenticationDetails = new AuthenticationDetails(
-        authenticationData
-    );
-    const userPool = new CognitoUserPool(poolData);
-    const userData = {
-        Username: email,
-        Pool: userPool,
-        Storage: new CookieStorage({domain: 'localhost', secure: false})
-    };
-    const cognitoUser = new CognitoUser(userData);
-    cognitoUser.authenticateUser(authenticationDetails, {
-        onSuccess: function (result) {
-            const accessToken = result.getAccessToken().getJwtToken();
-            console.log(accessToken);
-            axios.patch('https://l2gvl5jlxi5x5y3uzcqubcozy40yuzeh.lambda-url.eu-central-1.on.aws/User/updateUserByUsername', {
-                "username": email,
-                "authToken": accessToken.toString()
-          },   {
-            headers: {
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*',
-            },
-          })
-          .then(response => {
-            console.log(response.data);
-          })
-          .catch(error => {
-            console.error(error);
-            return error;
-          });
-            return accessToken;
-        },
-        onFailure: function (err) {
-            console.log(err.message || JSON.stringify(err));
-            return err.message
-        },
-    });
-}
+//     const authenticationData = {
+//         Username: email,
+//         Password: password,
+//     };
+//     const authenticationDetails = new AuthenticationDetails(
+//         authenticationData
+//     );
+//     const userPool = new CognitoUserPool(poolData);
+//     const userData = {
+//         Username: email,
+//         Pool: userPool,
+//         Storage: new CookieStorage({domain: 'localhost', secure: false})
+//     };
+//     const cognitoUser = new CognitoUser(userData);
+//     cognitoUser.authenticateUser(authenticationDetails, {
+//         onSuccess: function (result) {
+//             const accessToken = result.getAccessToken().getJwtToken();
+//             console.log(accessToken);
+//             axios.patch('https://l2gvl5jlxi5x5y3uzcqubcozy40yuzeh.lambda-url.eu-central-1.on.aws/User/updateUserByUsername', {
+//                 "username": email,
+//                 "authToken": accessToken.toString()
+//           },   {
+//             headers: {
+//               'Content-Type': 'application/json',
+//               'Access-Control-Allow-Origin': '*',
+//             },
+//           })
+//           .then(response => {
+//             console.log(response.data);
+//           })
+//           .catch(error => {
+//             console.error(error);
+//             return error;
+//           });
+//             return accessToken;
+//         },
+//         onFailure: function (err) {
+//             console.log(err.message || JSON.stringify(err));
+//             return err.message
+//         },
+//     });
+// }
+
 
 export default function Form() {
+    const router = useRouter();
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const response = await fetch('/api/auth/confirmRegister', {
+        await fetch('/api/auth/confirmRegister', {
             method: 'POST',
             body: JSON.stringify({
                 email: formData.get('email'),
                 confirmCode: formData.get('confirmCode'),
                 password: formData.get('rePassword'),
             }),
-        });
-        console.log(response);
-        await authenticateUser(formData.get('email'), formData.get('rePassword'));
-        router.redirect('main')
+        }).then( async (response) => {
+            console.log(response);
+        const loginResponse = await signIn("credentials", {
+                    username: formData.get('email'),
+                    password: formData.get('rePassword'),
+                    redirect: false,
+                })
+                console.log("Loginresponse..." + loginResponse);
+                if(!loginResponse?.error){
+                    console.log('testing...');
+                    router.push("/")
+                    router.refresh();
+                }
+        })
      }
     return (
         <form onSubmit={handleSubmit}>
