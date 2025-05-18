@@ -42,16 +42,18 @@ async function cognitoRegister (email: string, password: string) {
             export async function POST(request: Request) {
 
                 try {
-                    const { email, password } = await request.json();
+                    const { email, password, nlBox, tcBox } = await request.json();
                     //validate here (zod)
                     console.log(email, password);
-
+                    const tc = tcBox ? tcBox : 'no';
+                    const nl = nlBox ? nlBox : 'no'
                     const hashedPassword = await hash(password, 10);
                     console.log(hashedPassword);
                     // write POST request to User table in API here
                     await cognitoRegister(email, password);
                     axios.post('https://l2gvl5jlxi5x5y3uzcqubcozy40yuzeh.lambda-url.eu-central-1.on.aws/User/createUser', {
                         "email":email,
+                        "deviceId": nl,
                         "passwordHashed":hashedPassword,
                         "userType": "unregistered",
                         "username":email,

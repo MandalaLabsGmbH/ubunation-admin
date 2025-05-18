@@ -119,7 +119,7 @@ export default function Form() {
                 </div>
                 <div className='grid gap-2'>
                 <Label htmlFor='password'>Reenter Password</Label>
-                <Input id='rePassword' name='rePassword' type='rePassword' />
+                <Input id='rePassword' name='rePassword' type='password' />
                 </div>
                 <Button type="submit">Create an account</Button>
                 </div>
