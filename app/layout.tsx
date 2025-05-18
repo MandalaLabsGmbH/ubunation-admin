@@ -5,7 +5,6 @@ import { getServerSession } from "next-auth";
 import Logout from "./logout";
 import Link from "next/link";
 
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -36,7 +35,7 @@ export default async function RootLayout({
           <Logout />
         }
          {!session &&
-         <Link href='/login'>Login</Link>
+         <Link href='/register'>Login</Link>
         }
         {children}
       </body>

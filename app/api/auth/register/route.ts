@@ -42,10 +42,9 @@ async function cognitoRegister (email: string, password: string) {
             export async function POST(request: Request) {
 
                 try {
-                    const { email, password, nlBox, tcBox } = await request.json();
+                    const { email, password, nlBox } = await request.json();
                     //validate here (zod)
                     console.log(email, password);
-                    const tc = tcBox ? tcBox : 'no';
                     const nl = nlBox ? nlBox : 'no'
                     const hashedPassword = await hash(password, 10);
                     console.log(hashedPassword);

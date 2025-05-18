@@ -31,7 +31,7 @@ export default function Form() {
             <Card className='mx-auto max-w-sm border-0 shadow-none mt-4 sm:mt-12 sm:border sm:shadow-sm md:mt-20 lg:mt-24 xl:mt-28'>
             <CardHeader>
                 <CardTitle className='text-xl'>Sign Up</CardTitle>
-                <CardDescription>Enter your information to create an account</CardDescription>
+                <CardDescription>Enter your information to create an account and get a free collectible!</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className='grid gap-4'>
