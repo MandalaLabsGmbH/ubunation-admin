@@ -4,10 +4,10 @@ import { signOut } from "next-auth/react"
 
 export default function Logout() {
     return (
-        <span onClick={() => {
+        <button onClick={() => {
             signOut();
         }}>
             Logout
-        </span>
+        </button>
     )
 }

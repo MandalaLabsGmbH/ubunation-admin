@@ -4,7 +4,6 @@ import { chakraPetch } from '../../fonts'
 import Form from './form';
 import Image from 'next/image';
 import { Suspense } from 'react'
-import VideoComponent from '../../../components/ui/videoComponent'
 
 export default async function RegisterPage() {
  const session = await getServerSession();
@@ -20,9 +19,12 @@ export default async function RegisterPage() {
     sizes="100vw"
     style={{ width: '100%', height: 'auto' }}/>
       </section>
-      <section className="registerVid pt-6" >
+      <section className="registerVid pt-6 flex justify-center items-center h-150" >
       <Suspense fallback={<p>Loading video...</p>}>
-        <VideoComponent />
+      <video className="h-150" autoPlay muted loop preload="none" aria-label="Video player">
+        <source src={'https://deins.s3.eu-central-1.amazonaws.com/video/card/spinCard.mp4'} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
       </Suspense>
       {/* Other content of the page */}
     </section>

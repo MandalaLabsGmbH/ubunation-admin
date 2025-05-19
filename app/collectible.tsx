@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { Canvas, useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import { OrbitControls, PerspectiveCamera, Environment } from "@react-three/drei";
 import { Mesh } from "three";
 
 function MeshComponent() {
@@ -23,8 +23,7 @@ function MeshComponent() {
       <div className='flex justify-center items-center h-100'>
         <Canvas>
         <OrbitControls />
-        <ambientLight intensity={5}/>
-        <pointLight position={[0, 0, 0]} intensity={5} />
+        <Environment  preset='sunset' />
           <MeshComponent />
           <PerspectiveCamera
             makeDefault

@@ -29,13 +29,13 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
       >
         {!!session &&
           <Logout />
         }
          {!session &&
-         <Link href='/register'>Login</Link>
+         <Link href='/register'><button>Login</button></Link>
         }
         {children}
       </body>
