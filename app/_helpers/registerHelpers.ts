@@ -69,5 +69,3 @@ export async function cognitoConfirm(email: string, confirmCode: string): Promis
     });
     });
     }
-
- 
