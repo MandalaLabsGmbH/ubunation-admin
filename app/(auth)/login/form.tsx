@@ -16,7 +16,6 @@ export default function Form() {
         e.preventDefault();
         const response = await signIn("credentials", {
             username: formData.get('email'),
-            password: formData.get('password'),
             redirect: false,
         })
         console.log(response);
@@ -38,15 +37,6 @@ export default function Form() {
      <div className='grid gap-2'>
       <Label htmlFor='email'>Email</Label>
       <Input id='email' name='email' placeholder='m@example.com' />
-     </div>
-     <div className='grid gap-2'>
-      <div className='flex items-center'>
-       <Label htmlFor='password'>Password</Label>
-       <Link href='/forgot' className='ml-auto inline-block text-sm underline'>
-        Forgot your password?
-       </Link>
-      </div>
-      <Input id='password' name='password' type='password' />
      </div>
      <Button type="submit">Login</Button>
      <Button variant='outline'>Login with Google</Button>

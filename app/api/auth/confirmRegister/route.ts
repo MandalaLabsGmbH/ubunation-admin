@@ -27,10 +27,12 @@ async function cognitoConfirm(email: string, userPool: CognitoUserPool, confirmC
     const cognitoUser = new CognitoUser(userData);
     cognitoUser.confirmRegistration(confirmCode, true, function (err, result) {
         if (err) {
+            console.log('testconfirm1')
             console.log(err.message || JSON.stringify(err));
             return;
         }
-        console.log('call result: ' + result);
+        console.log('testconfirm2');
+        console.log(result);
         return result;
     });
 }
@@ -75,6 +77,7 @@ export async function POST (request: Request) {
     
  }
 catch (e) {
+    console.log('testconfirm3');
     console.log({ e });
  }
 

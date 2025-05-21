@@ -6,24 +6,25 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { FormEvent } from 'react';
-import router from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { cognitoRegister, generateId } from '@/app/_helpers/registerHelpers';
 
 export default function Form() {
+    const router = useRouter();
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const response = await fetch('/api/auth/register', {
-            method: 'POST',
-            body: JSON.stringify({
-                email: formData.get('email'),
-                password: formData.get('password'),
-                nlBox: formData.get('nlBox'),
-                tcBox: formData.get('tcBox'),
-            }),
-        });
-        console.log(formData.get('nlBox'))
-        console.log(response);
-        router.redirect('confirmRegister')
+        const pw = generateId(25);
+        const formEmail = formData.get('email') as string;
+        const response = await cognitoRegister(formEmail, pw);
+        if(response.toString() === 'success') {
+            console.log('cognito response: ' + response.toString())
+            router.push(`/confirmRegister?email=${formData.get('email')}&password=${pw}`);
+        }
+        else {
+            console.log('register fail: ' + response.toString())
+        }
+        
      }
     return (
         <form onSubmit={handleSubmit}>
@@ -36,10 +37,6 @@ export default function Form() {
                 <div className='grid gap-2'>
                 <Label htmlFor='email'>Email</Label>
                 <Input id='email' name='email' placeholder='m@example.com' required />
-                </div>
-                <div className='grid gap-2'>
-                <Label htmlFor='password'>Password</Label>
-                <Input id='password' name='password' type='password' required />
                 </div>
                 <div className='grid gap-2'>
                 <div className="flex items-center space-x-2">

@@ -6,10 +6,9 @@ import process from 'process';
 const handler = NextAuth({
     providers: [
         CredentialsProvider({
-            name: "Credentials",
+            name: "credentials",
             credentials: {
                 username: { label: "Username", type: "text", placeholder: "Username" },
-                password: { label: "Password", type: "password" }
             },
 
             authorize: async (credentials) => {
@@ -19,16 +18,15 @@ const handler = NextAuth({
                 });
 
                 if (!credentials) return null;
-                console.log('testing...')
-                //CLIENT_ID is COGNITO_CLIENT_ID
+
                 const params = {
-                    AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
+                    AuthFlow: AuthFlowType.USER_AUTH,
                     ClientId: process.env.CLIENT_ID,
                     AuthParameters: {
                         USERNAME: credentials.username,
-                        PASSWORD: credentials.password,
                     },
                 };
+                //CLIENT_ID is COGNITO_CLIENT_ID
 
                 try {
                     const command = new InitiateAuthCommand(params);
@@ -45,6 +43,7 @@ const handler = NextAuth({
             }
         })
     ],
+    
     pages: {
         signIn:  "/register"
     },

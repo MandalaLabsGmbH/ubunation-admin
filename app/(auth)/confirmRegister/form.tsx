@@ -5,6 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { FormEvent } from 'react';
+import { cognitoConfirm } from '@/app/_helpers/registerHelpers';
+import { useSearchParams } from 'next/navigation'
 // import axios from 'axios';
 // import {
 // 	CognitoUserPool,
@@ -15,86 +17,25 @@ import { FormEvent } from 'react';
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-// async function authenticateUser (email: any, password: any) {
-
-//     const poolId = "eu-central-1_flxgJwy19";
-//     const clientId = "3habrhuviqskit3ma595m5dp0b";
-
-//     console.log(poolId, clientId);
-
-//     const poolData = {
-//         UserPoolId: poolId ? poolId : 'no Cognito poolId found', // Your user pool id here
-//         ClientId: clientId ? clientId : 'no Cognito clientId found',
-//         Storage: new CookieStorage({domain: 'localhost', secure: false}) // Your client id here
-//     };
-
-//     const authenticationData = {
-//         Username: email,
-//         Password: password,
-//     };
-//     const authenticationDetails = new AuthenticationDetails(
-//         authenticationData
-//     );
-//     const userPool = new CognitoUserPool(poolData);
-//     const userData = {
-//         Username: email,
-//         Pool: userPool,
-//         Storage: new CookieStorage({domain: 'localhost', secure: false})
-//     };
-//     const cognitoUser = new CognitoUser(userData);
-//     cognitoUser.authenticateUser(authenticationDetails, {
-//         onSuccess: function (result) {
-//             const accessToken = result.getAccessToken().getJwtToken();
-//             console.log(accessToken);
-//             axios.patch('https://l2gvl5jlxi5x5y3uzcqubcozy40yuzeh.lambda-url.eu-central-1.on.aws/User/updateUserByUsername', {
-//                 "username": email,
-//                 "authToken": accessToken.toString()
-//           },   {
-//             headers: {
-//               'Content-Type': 'application/json',
-//               'Access-Control-Allow-Origin': '*',
-//             },
-//           })
-//           .then(response => {
-//             console.log(response.data);
-//           })
-//           .catch(error => {
-//             console.error(error);
-//             return error;
-//           });
-//             return accessToken;
-//         },
-//         onFailure: function (err) {
-//             console.log(err.message || JSON.stringify(err));
-//             return err.message
-//         },
-//     });
-// }
-
-
 export default function Form() {
+    const searchParams = useSearchParams();
+    const getEmail = searchParams.get('email') || 'no email';
+    // const getPass = searchParams.get('password');
     const router = useRouter();
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        await fetch('/api/auth/confirmRegister', {
-            method: 'POST',
-            body: JSON.stringify({
-                email: formData.get('email'),
-                confirmCode: formData.get('confirmCode'),
-                password: formData.get('rePassword'),
-            }),
-        }).then( async (response) => {
+        const confCode = formData.get('confirmCode')?.toString() || 'no code';
+        await cognitoConfirm(getEmail, confCode)
+        .then( async (response) => {
             console.log(response);
-        const loginResponse = await signIn("credentials", {
-                    username: formData.get('email'),
-                    password: formData.get('rePassword'),
+            const loginResponse = await signIn("credentials", {
+                    username: getEmail,
                     redirect: false,
                 })
-                console.log("Loginresponse..." + loginResponse);
+            console.log('login response:')
+            console.log(loginResponse);
                 if(!loginResponse?.error){
-                    console.log('testing...');
                     router.push("/")
                     router.refresh();
                 }
@@ -110,16 +51,8 @@ export default function Form() {
             <CardContent>
                 <div className='grid gap-4'>
                 <div className='grid gap-2'>
-                <Label htmlFor='email'>Email</Label>
-                <Input id='email' name='email' placeholder='m@example.com' />
-                </div>
-                <div className='grid gap-2'>
-                <Label htmlFor='email'>Confirmation Code</Label>
+                <Label htmlFor='confirmCode'>Confirmation Code</Label>
                 <Input id='confirmCode' name='confirmCode' placeholder='12345' />
-                </div>
-                <div className='grid gap-2'>
-                <Label htmlFor='password'>Reenter Password</Label>
-                <Input id='rePassword' name='rePassword' type='password' />
                 </div>
                 <Button type="submit">Create an account</Button>
                 </div>
