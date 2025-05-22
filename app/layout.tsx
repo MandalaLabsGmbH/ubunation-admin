@@ -43,8 +43,9 @@ export default async function RootLayout({
         {children}
         </CookiesProvider>
       </body>
-      <Footer />
-
+      <footer>
+        <Footer />
+      </footer>
     </html>
   );
 }
