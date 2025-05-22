@@ -8,12 +8,6 @@ import { FormEvent } from 'react';
 import { cognitoConfirm } from '@/app/_helpers/registerHelpers';
 import { useSearchParams } from 'next/navigation'
 // import axios from 'axios';
-// import {
-// 	CognitoUserPool,
-//     CognitoUser,
-//     CookieStorage,
-//     AuthenticationDetails
-// } from 'amazon-cognito-identity-js';
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
@@ -26,6 +20,9 @@ export default function Form() {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const confCode = formData.get('confirmCode')?.toString() || 'no code';
+        // const cookieResponse = await fetch('/api/cookies');
+        // const data = await cookieResponse.json();
+        // console.log(data);
         await cognitoConfirm(getEmail, confCode)
         .then( async (response) => {
             console.log(response);

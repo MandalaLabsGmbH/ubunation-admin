@@ -6,7 +6,6 @@
   
   export default async function ConfirmRegisterPage() {
    const session = await getServerSession();
-   console.log("session: " + session);
    if(session) {
       redirect("/")
    }

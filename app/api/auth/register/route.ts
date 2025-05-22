@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import {hash} from 'bcrypt';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
             export async function POST(request: Request) {
                 try {
@@ -18,7 +18,8 @@ import axios from 'axios';
                   return NextResponse.json({ message: 'success' });
                 }
                 catch (e) {
-                    console.log({ e });
-                    return NextResponse.json({ message: e }, {status: 500, statusText: "invalid database call"});
+                                        console.log({ e });
+                                        const err = e as AxiosError;
+                                        return NextResponse.json({ message: e }, {status: err.status, statusText: "invalid database call"});
                 }    
             }

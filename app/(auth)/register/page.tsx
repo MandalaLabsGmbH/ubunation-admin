@@ -6,7 +6,6 @@ import { Suspense } from 'react'
 
 export default async function RegisterPage() {
  const session = await getServerSession();
-    console.log("session: " + session);
  if(session) {
     redirect("/")
  }

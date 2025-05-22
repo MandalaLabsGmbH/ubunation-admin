@@ -8,6 +8,7 @@
 @tailwind utilities;
 
 @theme inline {
+  --color-kloppocar-orange: #ff3c00;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);

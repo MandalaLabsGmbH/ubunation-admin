@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
+import Head from 'next/head';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { getServerSession } from "next-auth";
+import { CookiesProvider } from "next-client-cookies/server"
 import Logout from "./logout";
+import Footer from "./footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,14 +30,21 @@ export default async function RootLayout({
   const session = await getServerSession();
   return (
     <html lang="en">
+      <Head>
+        <meta name="viewport"  content="width=device-width, initial-scale=1.0"  />
+      </Head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {!!session &&
           <Logout />
         }
+        <CookiesProvider>
         {children}
+        </CookiesProvider>
       </body>
+      <Footer />
+
     </html>
   );
 }
