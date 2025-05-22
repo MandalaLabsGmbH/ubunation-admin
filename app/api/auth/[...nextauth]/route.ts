@@ -4,6 +4,7 @@ import { CognitoIdentityProviderClient, InitiateAuthCommand, AuthFlowType } from
 import process from 'process';
 
 const handler = NextAuth({
+    secret: process.env.AUTH_SECRET,
     providers: [
         CredentialsProvider({
             name: "credentials",
