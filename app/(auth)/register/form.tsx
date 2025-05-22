@@ -21,26 +21,27 @@ export default function Form() {
         const response = await cognitoRegister(formEmail, pw);
         if(response.toString() === 'success') {
             console.log('cognito response: ' + response.toString());
-            const postResponse = await fetch('/api/auth/register', {
-            method: 'POST',
-            body: JSON.stringify({
-                email: formData.get('email'),
-                password: pw,
-                nlBox: formData.get('nlBox'),
-            }),
-        });
-            console.log('postResponse: ')
-            if(postResponse.status === 200) {
-                router.push(`/confirmRegister?email=${formData.get('email')}&password=${pw}`);
-            }
-            else {
-                console.log('db fail: ' + postResponse.statusText);
-            }
+             router.push(`/confirmRegister?email=${formData.get('email')}&password=${pw}`);
+            // const postResponse = await fetch('/api/auth/register', {
+            // method: 'POST',
+            // body: JSON.stringify({
+            //     email: formData.get('email'),
+            //     password: pw,
+            //     nlBox: formData.get('nlBox'),
+            // }),
+        // });
+            // console.log('postResponse: ')
+            // if(postResponse.status === 200) {
+            //     router.push(`/confirmRegister?email=${formData.get('email')}&password=${pw}`);
+        //     }
+        //     else {
+        //         console.log('db fail: ' + postResponse.statusText);
+        //     }
+        // }
+        // else {
+        //     console.log('register fail: ' + response.toString())
+        // }
         }
-        else {
-            console.log('register fail: ' + response.toString())
-        }
-        
      }
     return (
         <form onSubmit={handleSubmit}>
