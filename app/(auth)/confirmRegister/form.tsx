@@ -19,6 +19,10 @@ export default function Form() {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
+        const idCheck = await fetch(`/api/db/user?email=${getEmail}`, {
+            method: 'GET'
+  });
+        console.log(JSON.stringify(idCheck));
         const confCode = formData.get('confirmCode')?.toString() || 'no code';
         // const cookieResponse = await fetch('/api/cookies');
         // const data = await cookieResponse.json();

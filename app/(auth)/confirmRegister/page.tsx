@@ -4,6 +4,7 @@
   import Form from './form';
   import { Suspense } from 'react'
   
+  
   export default async function ConfirmRegisterPage() {
    const session = await getServerSession();
    if(session) {

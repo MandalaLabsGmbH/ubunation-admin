@@ -1,23 +1,9 @@
 import { Collectible } from "./collectible"
 import { inter, interTight } from './fonts'
-import { getServerSession } from 'next-auth';
-
-async function getUserEmail() {
-  const session = await getServerSession();
-  const userEmail = session?.user.name;
-  const postResponse = await fetch(process.env.NEXTAUTH_URL + '/api/db/user?email=' + userEmail, {
-            method: 'GET'
-        });
-  return postResponse
-}
-
 
 export default async function RootPage() {
-  const check = await getUserEmail();
-  console.log(JSON.stringify(check));
   const interFont = inter;
   const interTightFont = interTight;
-  
 
   return <div>
     <section className="Collectible Preview pt-6"><Collectible /></section>
