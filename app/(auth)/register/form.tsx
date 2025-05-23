@@ -2,17 +2,20 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
+import { Loader2 } from "lucide-react";
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { cognitoRegister, generateId } from '@/app/_helpers/registerHelpers';
 
 export default function Form() {
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setLoading(true);
         const formData = new FormData(e.currentTarget);
         const pw = generateId(25);
         const formEmail = formData.get('email') as string;
@@ -64,7 +67,15 @@ export default function Form() {
                     </label>
 		        </div>
                 </div>
-                <Button type="submit">Ein Konto erstellen</Button>
+                {!loading &&
+                    <Button type="submit">Ein Konto erstellen</Button>
+                }
+                {!!loading &&
+                    <Button disabled>
+                        <Loader2 className="animate-spin" /> 
+                        Bitte warten
+                        </Button>
+                }
                 </div>
             </CardContent>
             </Card>
