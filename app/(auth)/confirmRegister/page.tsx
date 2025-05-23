@@ -24,19 +24,16 @@
       </section>
       <section className={`${interTight.className} flex justify-center items-center` }>
         <p className=" pt-14 text-xl font-bold" >
-         Rocketeer Festival x Kloppocar
+         Wer sammelt, gewinnt
         </p>
         </section>
         <section className={`${inter.className}` }>
         <div className="flex justify-center items-center"> <p className=" pt-6 text-l font" >
-         Gemeinsam sammeln wir fur
-        </p></div>
-        <div className="flex justify-center items-center"> <p className="text-l font" >
-         Kinderhilfsorganisationen und verlosen bei
-        </p></div>
-        <div className="flex justify-center items-center"> <p className="text-l font" >
-         Erreichen des Sammelyiels tolle Preise.
-        </p></div>
+       Sichere dir die Chance auf ein Treffen mit Jürgen Klopp –
+      </p></div>
+      <div className="flex justify-center items-center"> <p className="text-l font" >
+       Digital sammeln, real erleben!
+      </p></div>
         </section>
        <Form /> 
        </div>

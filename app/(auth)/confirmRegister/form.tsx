@@ -40,18 +40,18 @@ export default function Form() {
      }
     return (
         <form onSubmit={handleSubmit}>
-            <Card className='mx-auto max-w-sm border-0 shadow-none mt-4 sm:mt-12 sm:border sm:shadow-sm md:mt-20 lg:mt-24 xl:mt-28'>
+            <Card className='mx-auto max-w-sm border-0 shadow-none sm:border sm:shadow-sm mt-8'>
             <CardHeader>
-                <CardTitle className='text-xl'>Sign Up</CardTitle>
-                <CardDescription>Please enter the confirmation code found in your email to continue.</CardDescription>
+                <CardTitle className='text-xl'>Anmelden</CardTitle>
+                <CardDescription>Bitte geben Sie den Bestätigungscode aus Ihrer E-Mail ein, um fortzufahren.</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className='grid gap-4'>
                 <div className='grid gap-2'>
-                <Label htmlFor='confirmCode'>Confirmation Code</Label>
+                <Label htmlFor='confirmCode'>Bestätigungscode</Label>
                 <Input id='confirmCode' name='confirmCode' placeholder='12345' />
                 </div>
-                <Button type="submit">Create an account</Button>
+                <Button type="submit">Vervollständigen Registrierung</Button>
                 </div>
             </CardContent>
             </Card>

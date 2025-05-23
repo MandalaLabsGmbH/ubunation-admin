@@ -7,7 +7,7 @@ import { OrbitControls, PerspectiveCamera, Environment } from "@react-three/drei
 import { Mesh } from "three";
 
 function MeshComponent() {
-    const fileUrl = "https://deins.s3.eu-central-1.amazonaws.com/Objects3d/kloppocar/collectibleTest/KloppoCar_11.gltf";
+    const fileUrl = "https://deins.s3.eu-central-1.amazonaws.com/Objects3d/kloppocar/KloppoCar_05.gltf";
     const mesh = useRef<Mesh>(null!);
     const gltf = useLoader(GLTFLoader, fileUrl);
     

@@ -3,10 +3,13 @@ import axios, { AxiosError } from 'axios';
 
             export async function GET(request: Request) {
                 try {
-                    const { email } = await request.json();
+                    const { searchParams } = new URL(request.url);
+                    const email = searchParams.get("email");
                     // validate here (zod)
-                    axios.get(`https://l2gvl5jlxi5x5y3uzcqubcozy40yuzeh.lambda-url.eu-central-1.on.aws/User/getUserByUsername/${email}`)
-                  return NextResponse.json({ message: 'success' });
+                    const userReq = axios.get(`https://l2gvl5jlxi5x5y3uzcqubcozy40yuzeh.lambda-url.eu-central-1.on.aws/User/getUserByEmail?email=${email}`)
+                    console.log('craaaaayz other thing');
+                    console.log((await userReq).data.userId);
+                    return NextResponse.json({ message: 'success', req: userReq  });
                 }
                 catch (e)
                  {

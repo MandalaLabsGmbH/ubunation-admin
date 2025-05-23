@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import Head from 'next/head';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { getServerSession } from "next-auth";
+// import { getServerSession } from "next-auth";
 import { CookiesProvider } from "next-client-cookies/server"
-import Logout from "./logout";
 import Footer from "./footer";
 
 const geistSans = Geist({
@@ -27,25 +26,26 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession();
+  // const session = await getServerSession();
   return (
     <html lang="en">
       <Head>
         <meta name="viewport"  content="width=device-width, initial-scale=1.0"  />
       </Head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased p-10`}
       >
-        {!!session &&
+        {/* {!!session &&
           <Logout />
-        }
+        } */}
+        
         <CookiesProvider>
         {children}
         </CookiesProvider>
-      </body>
-      <footer>
+        <footer>
         <Footer />
       </footer>
+      </body>
     </html>
   );
 }
