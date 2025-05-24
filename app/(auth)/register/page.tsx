@@ -9,7 +9,7 @@ export default async function RegisterPage() {
  if(session) {
     redirect("/")
  }
-
+ 
  return (
   <div className="page">
       <section className="registerVid pt-10 flex justify-center " >
