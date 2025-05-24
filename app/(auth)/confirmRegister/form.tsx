@@ -84,8 +84,8 @@ export default function Form() {
         <form onSubmit={handleSubmit}>
             <Card className='mx-auto max-w-sm border-0 shadow-none sm:border sm:shadow-sm mt-8'>
             <CardHeader>
-                <CardTitle className='text-xl'>Anmelden</CardTitle>
-                <CardDescription>Bitte geben Sie den Bestätigungscode aus Ihrer E-Mail ein, um fortzufahren.</CardDescription>
+                <CardTitle className='text-xl'>Email bestätigen</CardTitle>
+                <CardDescription>Bitte gebe den Bestätigungscode aus der Email ein um deinen Account zu erstellen und dir deine Chance auf ein Treffen mit Jürgen Klopp zu sichern.</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className='grid gap-4'>
@@ -94,7 +94,7 @@ export default function Form() {
                 <Input id='confirmCode' name='confirmCode' placeholder='12345' />
                 </div>
                 {!loading &&
-                    <Button type="submit">Vervollständigen Registrierung</Button>
+                    <Button type="submit">Jetzt sammeln!</Button>
                 }
                 {!!loading &&
                     <Button disabled>
