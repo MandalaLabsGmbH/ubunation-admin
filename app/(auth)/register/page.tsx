@@ -8,7 +8,9 @@ export default async function RegisterPage() {
  const session = await getServerSession();
  if(session) {
     redirect("/")
- }
+} 
+const exampleProject = await fetch(`${process.env.NEXTAUTH_URL}/api/db/project`, { method: 'GET'});
+console.log(exampleProject);
  
  return (
   <div className="page">

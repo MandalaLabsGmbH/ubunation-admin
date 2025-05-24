@@ -10,6 +10,7 @@ const handler = NextAuth({
             name: "credentials",
             credentials: {
                 username: { label: "Username", type: "text", placeholder: "Username" },
+                password: { label: "Password", type: "text", placeholder: "Password" },
             },
 
             authorize: async (credentials) => {
@@ -21,10 +22,11 @@ const handler = NextAuth({
                 if (!credentials) return null;
 
                 const params = {
-                    AuthFlow: AuthFlowType.USER_AUTH,
+                    AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
                     ClientId: process.env.CLIENT_ID,
                     AuthParameters: {
                         USERNAME: credentials.username,
+                        PASSWORD: credentials.password,
                     },
                 };
                 //CLIENT_ID is COGNITO_CLIENT_ID

@@ -7,8 +7,33 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { FormEvent, useState } from 'react';
+import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation';
 import { cognitoRegister, generateId } from '@/app/_helpers/registerHelpers';
+
+ function randomIntFromInterval(min: number, max: number) { 
+    return Math.floor(Math.random() * (max - min + 1)) + min; 
+ }
+
+async function submitUserCollectible(email:string) {
+  const randomInt = randomIntFromInterval(1, 14);
+  await fetch(`/api/db/user?email=${email}`, {
+            method: 'GET'
+  }).then(async (response) => {
+    const data = await response.json();
+    const userId = data.userId;
+    await fetch(`/api/db/userCollectible`, {
+            method: 'POST',
+            body: JSON.stringify({
+                userId: userId,
+                collectibleId: randomInt,
+                mint: userId,
+    })
+    }).catch((error) => {
+        return error;
+    })
+  })
+}   
 
 export default function Form() {
     const router = useRouter();
@@ -24,11 +49,25 @@ export default function Form() {
         const formNlBox = formData.get('nlBox') as string;
         console.log(formNlBox);
         await cognitoRegister(formEmail, pw)
-        .then((response)=> {
-            if(response.toString() === 'success') {
-            console.log('cognito response: ' + response.toString());
-             router.push(`/confirmRegister?email=${formData.get('email')}&password=${pw}`);
-            }
+        .then(async (response)=> {
+            await signIn("credentials", {
+                username: formEmail,
+                password: pw,
+                redirect: false,
+            }).then(async (loginResponse) => {
+                console.log('cognito response: ' + response.toString());
+                console.log(loginResponse);
+                if(!loginResponse?.error){
+                    const check = await submitUserCollectible(formEmail);
+                    console.log(JSON.stringify(check));
+                    router.push("/")
+                    router.refresh();
+                }
+                }).catch((error) => {
+                    console.log(error);
+                    setLoading(false);
+                    setShowError(true);
+                })
         }).catch((error) => {
             console.log(error);
             setLoading(false);
