@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     AUTH_SECRET: process.env.AUTH_SECRET,
     USER_POOL_ID: process.env.USER_POOL_ID,
     CLIENT_ID: process.env.CLIENT_ID,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   },
 };
 

@@ -86,9 +86,7 @@ export default async function RootPage() {
         </p></div>
         <div className="flex justify-center items-center max-w-200 mx-auto"> <p className=" pt-6 text-l font" >
          Mit jeder weiteren Karte wächst deine Chance auf das Treffen mit <span className='font-bold'>Jürgen Klopp und andere exklusive Preise.</span> Tausche, sammle und sichere dir deinen Platz, sobald unsere App verfügbar ist. Wenn es soweit ist, informieren wir dich.
-        </p>
-        </div>
-        <p className="pt-6 flex justify-center items-center">{getUrl ? getUrl : 'no URL found'}</p>
+        </p></div>
       </section>
     
   </div>
