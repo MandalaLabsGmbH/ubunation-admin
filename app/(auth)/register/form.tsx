@@ -76,7 +76,7 @@ export default function Form() {
 		        </div>
                 </div>
                 {!loading &&
-                    <Button type="submit">Ein Konto erstellen</Button>
+                    <Button type="submit">Jetzt anmelden</Button>
                 }
                 {!!loading &&
                     <Button disabled>
