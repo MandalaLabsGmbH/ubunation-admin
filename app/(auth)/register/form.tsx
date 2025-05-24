@@ -13,18 +13,27 @@ import { cognitoRegister, generateId } from '@/app/_helpers/registerHelpers';
 export default function Form() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [showError, setShowError] = useState(false);
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
+        setShowError(false);
         const formData = new FormData(e.currentTarget);
         const pw = generateId(25);
         const formEmail = formData.get('email') as string;
         const formNlBox = formData.get('nlBox') as string;
         console.log(formNlBox);
-        const response = await cognitoRegister(formEmail, pw);
-        if(response.toString() === 'success') {
+        await cognitoRegister(formEmail, pw)
+        .then((response)=> {
+            if(response.toString() === 'success') {
             console.log('cognito response: ' + response.toString());
              router.push(`/confirmRegister?email=${formData.get('email')}&password=${pw}`);
+            }
+        }).catch((error) => {
+            console.log(error);
+            setLoading(false);
+            setShowError(true);
+        })
             // const postResponse = await fetch('/api/auth/register', {
             // method: 'POST',
             // body: JSON.stringify({
@@ -44,7 +53,6 @@ export default function Form() {
         // else {
         //     console.log('register fail: ' + response.toString())
         // }
-        }
      }
     return (
         <form onSubmit={handleSubmit}>
@@ -75,6 +83,11 @@ export default function Form() {
                         <Loader2 className="animate-spin" /> 
                         Bitte warten
                         </Button>
+                }
+                {!!showError &&
+                    <p className="text-red-600 flex justify-center items-center">
+                        Error beim Anmelden
+                    </p>
                 }
                 </div>
             </CardContent>
