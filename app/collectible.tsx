@@ -2,14 +2,17 @@
 
 import { useRef } from "react";
 import { Canvas, useLoader } from "@react-three/fiber";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls, PerspectiveCamera, Environment } from "@react-three/drei";
 import { Mesh } from "three";
 
-function MeshComponent() {
-    const fileUrl = "https://deins.s3.eu-central-1.amazonaws.com/Objects3d/kloppocar/KloppoCar_05.gltf";
+interface MeshComponentProps {
+  url: string;
+}
+
+function MeshComponent({url}: MeshComponentProps) {
     const mesh = useRef<Mesh>(null!);
-    const gltf = useLoader(GLTFLoader, fileUrl);
+    const gltf = useLoader(GLTFLoader, url) as GLTF;;
     
     return (
       <mesh ref={mesh}>
@@ -18,13 +21,14 @@ function MeshComponent() {
     );
   }
 
-  export function Collectible() {
+  export function Collectible({url}: MeshComponentProps) {
     return (
       <div className='flex justify-center items-center h-100'>
         <Canvas>
         <OrbitControls />
         <Environment  preset='sunset' />
-          <MeshComponent />
+          <MeshComponent url={url}
+          />
           <PerspectiveCamera
             makeDefault
             position={[0, 0, 1.8]}

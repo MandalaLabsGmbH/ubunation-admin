@@ -3,10 +3,14 @@ import axios, { AxiosError } from 'axios';
 
             export async function GET(request: Request) {
                 try {
-                    const { collectibleId } = await request.json();
+                    const { searchParams } = new URL(request.url);
+                    const collectibleId = searchParams.get("collectibleId");
                     // validate here (zod)
-                    axios.get(`https://l2gvl5jlxi5x5y3uzcqubcozy40yuzeh.lambda-url.eu-central-1.on.aws/Collectible/getCollectibleByCollectibleId/${collectibleId}`)
-                  return NextResponse.json({ message: 'success' });
+                    const userResponse = await axios.get(`https://l2gvl5jlxi5x5y3uzcqubcozy40yuzeh.lambda-url.eu-central-1.on.aws/Collectible/getCollectibleByCollectibleId?collectibleId=${collectibleId}`);
+                    const objectUrl = userResponse.data.embedRef['url'];
+                    console.log('collectibleUrl other thing');
+                    console.log(userResponse.data.embedRef['url']);
+                    return NextResponse.json({ message: 'success', objectUrl: objectUrl });
                 }
                 catch (e)
                  {
@@ -14,4 +18,4 @@ import axios, { AxiosError } from 'axios';
                     const err = e as AxiosError;
                     return NextResponse.json({ message: e }, {status: err.status, statusText: "invalid database call"});
                 }    
-            }
+            };
