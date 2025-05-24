@@ -9,7 +9,7 @@ async function getCollectibleUrl(): Promise<string | null> { // Declare return t
 
     if (!userEmail) {
       console.warn("User email not found in session.");
-      return null; // Return null if no user email
+      return "User email not found in session."; // Return null if no user email
     }
 
     // --- Fetch User Data ---
@@ -26,7 +26,7 @@ async function getCollectibleUrl(): Promise<string | null> { // Declare return t
 
     if (!userId) {
       console.warn("User ID not found for email:", userEmail);
-      return null;
+      return "User ID not found for email:";
     }
 
     // --- Fetch User Collectible Data ---
@@ -43,7 +43,7 @@ async function getCollectibleUrl(): Promise<string | null> { // Declare return t
 
     if (!collectibleId) {
       console.warn("Collectible ID not found for user:", userId);
-      return null;
+      return "Collectible ID not found for user";
     }
 
     // --- Fetch Collectible Data ---
@@ -62,7 +62,7 @@ async function getCollectibleUrl(): Promise<string | null> { // Declare return t
   } catch (error) {
     console.error("Error in getCollectibleUrl:", error);
     // Depending on your error handling strategy, you might rethrow, return null, or a default value
-    return null; // Return null on error, or throw error if you want to propagate it
+    return "Error in getCollectibleUrl"; // Return null on error, or throw error if you want to propagate it
   }
 }
 
@@ -86,7 +86,9 @@ export default async function RootPage() {
         </p></div>
         <div className="flex justify-center items-center max-w-200 mx-auto"> <p className=" pt-6 text-l font" >
          Mit jeder weiteren Karte wächst deine Chance auf das Treffen mit <span className='font-bold'>Jürgen Klopp und andere exklusive Preise.</span> Tausche, sammle und sichere dir deinen Platz, sobald unsere App verfügbar ist. Wenn es soweit ist, informieren wir dich.
-        </p></div>
+        </p>
+        </div>
+        <p className="pt-6 flex justify-center items-center">{getUrl ? getUrl : 'no URL found'}</p>
       </section>
     
   </div>
