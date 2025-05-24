@@ -9,6 +9,10 @@ export default async function RegisterPage() {
  if(session) {
     redirect("/")
  }
+await fetch(`${process.env.NEXTAUTH_URL}/api/db/userCollectible?userId=1`, {
+      method: 'GET'
+    });
+
  return (
   <div className="page">
       <section className="registerVid pt-10 flex justify-center " >
