@@ -13,7 +13,7 @@ import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
 function randomIntFromInterval(min: number, max: number) { 
-    return Math.floor(Math.random() * (max - min + 1) + min); 
+    return Math.floor(Math.random() * (max - min + 1)) + min; 
 } 
 
 async function submitUserCollectible(email:string) {
@@ -23,7 +23,6 @@ async function submitUserCollectible(email:string) {
   }).then(async (response) => {
     const data = await response.json();
     const userId = data.userId;
-    console.log(`WHOOOHOOOOO! ${userId}`);
     await fetch(`/api/db/userCollectible`, {
             method: 'POST',
             body: JSON.stringify({
