@@ -6,10 +6,11 @@ import axios, { AxiosError } from 'axios';
                     const { searchParams } = new URL(request.url);
                     const email = searchParams.get("email");
                     // validate here (zod)
-                    const userReq = axios.get(`https://l2gvl5jlxi5x5y3uzcqubcozy40yuzeh.lambda-url.eu-central-1.on.aws/User/getUserByEmail?email=${email}`)
+                    const userResponse = await axios.get(`https://l2gvl5jlxi5x5y3uzcqubcozy40yuzeh.lambda-url.eu-central-1.on.aws/User/getUserByEmail?email=${email}`)
+                    const userId = userResponse.data.userId;
                     console.log('craaaaayz other thing');
-                    console.log((await userReq).data.userId);
-                    return NextResponse.json({ message: 'success', req: userReq  });
+                    console.log(userResponse.data.userId);
+                    return NextResponse.json({ message: 'success', userId: userId });
                 }
                 catch (e)
                  {
