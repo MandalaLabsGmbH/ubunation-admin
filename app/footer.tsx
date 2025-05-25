@@ -10,7 +10,7 @@ return <footer>
       </p>
       </div>
       <div className="flex justify-center items-center md:pl-20">
-      <Link href="" className="text-base text-kloppocar-orange" >
+      <Link href="https://www.instagram.com/kloppocar" className="text-base text-kloppocar-orange" >
         Instagram
       </Link>
       </div>
