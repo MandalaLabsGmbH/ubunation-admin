@@ -130,7 +130,7 @@ export default function Form() {
                 }
                 {!!showError &&
                     <p className="text-red-600 flex justify-center items-center">
-                        Error beim Anmelden
+                        Diese E-Mail-Adresse ist bereits registriert.
                     </p>
                 }
                 </div>
