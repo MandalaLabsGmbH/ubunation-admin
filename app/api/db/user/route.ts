@@ -8,7 +8,6 @@ import axios, { AxiosError } from 'axios';
                     // validate here (zod)
                     const userResponse = await axios.get(`https://l2gvl5jlxi5x5y3uzcqubcozy40yuzeh.lambda-url.eu-central-1.on.aws/User/getUserByEmail?email=${email}`)
                     const userId = userResponse.data.userId;
-                    console.log('craaaaayz other thing');
                     console.log(userResponse.data.userId);
                     return NextResponse.json({ message: 'success', userId: userId });
                 }

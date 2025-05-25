@@ -8,7 +8,6 @@ import axios, { AxiosError } from 'axios';
                     // validate here (zod)
                     const userResponse = await axios.get(`https://l2gvl5jlxi5x5y3uzcqubcozy40yuzeh.lambda-url.eu-central-1.on.aws/UserCollectible/getUserCollectiblesByOwnerId?ownerId=${userId}`)
                     const collectibleId = userResponse.data[0].collectibleId;
-                    console.log('cooooollectible other thing');
                     console.log(userResponse.data[0].collectibleId);
                     return NextResponse.json({ message: 'success', collectibleId: collectibleId });
                 }

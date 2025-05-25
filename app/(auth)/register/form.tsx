@@ -15,13 +15,37 @@ import { cognitoRegister, generateId } from '@/app/_helpers/registerHelpers';
     return Math.floor(Math.random() * (max - min + 1)) + min; 
  }
 
+ async function getUserIdWithRetry(email:string) {
+  let retries = 5;
+  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+  while (retries > 0) {
+    try {
+      const res = await fetch(`/api/db/user?email=${email}`, {
+            method: 'GET'
+      })
+      if (!res.ok) {
+        throw new Error('API GET function failed');
+      }
+      const data = await res.json();
+      console.log('API GET response:', data);
+      return data;
+    } catch (error) {
+      console.log(`Error calling API GET, retrying... ${error}`);
+      retries--;
+      if (retries === 0) {
+        throw new Error('Failed to invoke API GET after several attempts');
+      }
+      // Wait for a few seconds before retrying
+      await delay(500); // Wait for 5 seconds
+    }
+  }
+}
+
 async function submitUserCollectible(email:string) {
   const randomInt = randomIntFromInterval(1, 14);
-  await fetch(`/api/db/user?email=${email}`, {
-            method: 'GET'
-  }).then(async (response) => {
-    const data = await response.json();
-    const userId = data.userId;
+  await getUserIdWithRetry(email)
+  .then(async (response) => {
+    const userId = response.userId;
     await fetch(`/api/db/userCollectible`, {
             method: 'POST',
             body: JSON.stringify({
@@ -50,13 +74,13 @@ export default function Form() {
         console.log(formNlBox);
         await cognitoRegister(formEmail, pw)
         .then(async (response)=> {
+            console.log('cognito response: ' + response?.toString());
             await signIn("credentials", {
                 username: formEmail,
                 password: pw,
                 redirect: false,
             }).then(async (loginResponse) => {
-                console.log('cognito response: ' + response.toString());
-                console.log(loginResponse);
+                console.log('login response: ' + loginResponse?.toString());
                 if(!loginResponse?.error){
                     const check = await submitUserCollectible(formEmail);
                     console.log(JSON.stringify(check));
