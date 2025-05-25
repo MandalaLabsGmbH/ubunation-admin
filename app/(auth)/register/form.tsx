@@ -115,7 +115,7 @@ export default function Form() {
                     <Checkbox defaultChecked id="nlBox" name="nlBox">
                     </Checkbox>
                     <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" htmlFor="nlBox">
-                        Ich möchte den DEINS-Newsletter abonnieren
+                        Ich möchte den Kloppocar-Newsletter abonnieren
                     </label>
 		        </div>
                 </div>
