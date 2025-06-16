@@ -68,7 +68,7 @@ export default function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
                         <div className='flex items-center space-x-2'>
                             <Checkbox id="nlBox" name="nlBox" defaultChecked />
                             <label htmlFor="nlBox" className="text-sm font-medium leading-none">
-                                I want to subscribe to the Kloppocar newsletter
+                                I want to subscribe to the UBUNΛTION Newsletter
                             </label>
                         </div>
                         {!loading ? (

@@ -4,6 +4,7 @@ import { useState, Suspense, JSX } from 'react';
 import LoginForm from './login-form';
 import RegisterForm from './register-form';
 import ConfirmRegisterForm from './confirm-register-form';
+import Image from 'next/image'
 
 export type AuthView = 'login' | 'register' | 'confirm_register';
 
@@ -24,32 +25,31 @@ export default function LoginPage() {
     }
 
     let formComponent;
-    let headerText: string | JSX.Element;
+    let switchViewText: JSX.Element;
 
     switch (view) {
         case 'register':
-            // Pass the updated callback to the register form
             formComponent = <RegisterForm onRegisterSuccess={onRegisterSuccess} />;
-            headerText = (
+            switchViewText = (
                 <>
                    Already have an account?{' '}
-                    <button onClick={() => switchView('login')} className='underline'>
+                    <button onClick={() => switchView('login')} className='underline font-semibold'>
                         Login
                     </button>
                 </>
             );
             break;
         case 'confirm_register':
-            // Pass email and password to the confirm form
             formComponent = <ConfirmRegisterForm email={email} password={password} />;
-            headerText = `We've sent a confirmation code to ${email}.`;
+            // We don't show a link on the confirmation page
+            switchViewText = <></>;
             break;
         default: // 'login'
             formComponent = <LoginForm />;
-            headerText = (
+            switchViewText = (
                 <>
                     Don&apos;t have an account?{' '}
-                    <button onClick={() => switchView('register')} className='underline'>
+                    <button onClick={() => switchView('register')} className='underline font-semibold'>
                         Sign up
                     </button>
                 </>
@@ -59,30 +59,35 @@ export default function LoginPage() {
     // The rest of your JSX remains the same...
     return (
         <div className="page">
-            <section className="registerVid pt-10 flex justify-center">
-                <div className="flex justify-center bg-black items-center h-80 w-60 overflow-hidden translate-z-1 rounded-4xl border border-solid p-10px">
-                    <Suspense fallback={<p>Loading video...</p>}>
-                        <video className="h-80" autoPlay muted loop preload="none" aria-label="Video player">
-                            <source src={'https://deins.s3.eu-central-1.amazonaws.com/video/card/spinCard.mp4'} type="video/mp4" />
-                            Your browser does not support the video tag.
-                        </video>
+            <div className="registerLogo w-1/2 max-w-xs mx-auto relative">
+                <Suspense fallback={<p>Loading logo...</p>}>
+                        <Image
+                            src="/images/ubuLogoBlack.png"
+                            alt="Picture of a collectible"
+                            width={1500}
+                            height={1000}
+                        />
                     </Suspense>
-                </div>
-            </section>
-            <section className="flex justify-center items-center">
-                <p className="pt-6 text-l font">
-                    Sichere dir die Chance auf ein Treffen mit Jürgen Klopp –
-                </p>
-            </section>
-            <section className="flex justify-center items-center">
-                <p className="text-l font">
-                    Digital sammeln, real erleben!
-                </p>
-            </section>
-            <div className='mt-4 text-center text-sm'>
-                {headerText}
             </div>
+            <section className="flex justify-center items-center">
+                <p className="text-l font-bold">
+                    Discover UBUNΛTION:
+                </p>
+            </section>
+             <section className="flex justify-center items-center">
+                <p className="text-l font-bold">
+                    Uniting Hearts, Changing Lives -
+                </p>
+            </section>
+            <section className="flex justify-center items-center">
+                <p className="text-l font-bold">
+                    Explore Our Current Charity Campaigns!
+                </p>
+            </section>
             {formComponent}
+            <div className='mt-4 text-center text-sm'>
+                {switchViewText}
+            </div>
         </div>
     );
 }

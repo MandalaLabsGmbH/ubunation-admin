@@ -39,9 +39,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     *
-     * This ensures the middleware doesn't interfere with essential assets and APIs.
+     * - any path with a file extension (e.g., .png, .jpg, .svg)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+     '/((?!api|_next/static|_next/image|.*\\..*|favicon.ico).*)',
   ],
 };
