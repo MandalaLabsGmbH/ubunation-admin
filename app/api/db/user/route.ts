@@ -1,38 +1,50 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import axios, { AxiosError } from 'axios';
+import { getToken } from "next-auth/jwt";
 
-            export async function GET(request: Request) {
-                try {
-                    const { searchParams } = new URL(request.url);
-                    const email = searchParams.get("email");
-                    // validate here (zod)
-                    const userResponse = await axios.get(`https://l2gvl5jlxi5x5y3uzcqubcozy40yuzeh.lambda-url.eu-central-1.on.aws/User/getUserByEmail?email=${email}`)
-                    const userId = userResponse.data.userId;
-                    console.log(userResponse.data.userId);
-                    return NextResponse.json({ message: 'success', userId: userId });
-                }
-                catch (e)
-                 {
-                    console.log({ e });
-                    const err = e as AxiosError;
-                    return NextResponse.json({ message: e }, {status: err.status, statusText: "invalid database call"});
-                }    
-            };
+const API_BASE_URL = process.env.API_BASE_URL;
 
-            export async function PATCH(request: Request) {
-                try {
-                    const { email, token } = await request.json();
-                    // validate here (zod)
-                    axios.post('https://l2gvl5jlxi5x5y3uzcqubcozy40yuzeh.lambda-url.eu-central-1.on.aws/User/updateUserByUsername', {
-                       "username": email,
-                       "authToken": token,
-                  })
-                  return NextResponse.json({ message: 'success' });
-                }
-                catch (e)
-                 {
-                    console.log({ e });
-                    const err = e as AxiosError;
-                    return NextResponse.json({ message: e }, {status: err.status, statusText: "invalid database call"});
-                }    
-            };
+export async function GET(request: NextRequest) {
+        try {
+        const token = await getToken({ req: request, secret: process.env.AUTH_SECRET });
+        if (!token?.accessToken) {
+            return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+        }
+        
+        const email = token.email;
+        
+        const userResponse = await axios.get(`${API_BASE_URL}/User/getUserByEmail?email=${email}`, {
+            headers: { 'Authorization': `Bearer ${token.accessToken}` }
+        });
+
+        return NextResponse.json({ message: 'success', userId: userResponse.data.userId });
+    } catch (e) {
+        console.log({ e });
+        const err = e as AxiosError;
+        return NextResponse.json({ message: e }, { status: err.status, statusText: "invalid database call" });
+    }
+}
+
+export async function PATCH(request: NextRequest) {
+    try {
+        const token = await getToken({ req: request, secret: process.env.AUTH_SECRET });
+        if (!token?.accessToken) {
+            return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+        }
+        
+        const { email, token: authToken } = await request.json();
+        
+        await axios.post(`${API_BASE_URL}/User/updateUserByUsername`, {
+           "username": email,
+           "authToken": authToken,
+        }, {
+            headers: { 'Authorization': `Bearer ${token.accessToken}` }
+        });
+
+        return NextResponse.json({ message: 'success' });
+    } catch (e) {
+        console.log({ e });
+        const err = e as AxiosError;
+        return NextResponse.json({ message: e }, { status: err.status, statusText: "invalid database call" });
+    }
+}

@@ -1,74 +1,50 @@
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
+import { authOptions } from "./api/auth/[...nextauth]/route"; 
 import { Collectible } from "./collectible"
 import { inter, interTight } from './fonts'
 
 async function getCollectibleUrl(): Promise<string | null> { // Declare return type as Promise<string | null>
   try {
-    const session = await getServerSession();
-    const userEmail = session?.user?.name; // Use optional chaining for safety
-
-    if (!userEmail) {
-      console.warn("User email not found in session.");
-      return "User email not found in session."; // Return null if no user email
-    }
-
-    // --- Fetch User Data ---
-    const userResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/db/user?email=${userEmail}`, {
+ const userCollectibleResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/db/userCollectible`, {
       method: 'GET',
-    });
-
-    if (!userResponse.ok) {
-      const errorText = await userResponse.text();
-      throw new Error(`Failed to fetch user: ${userResponse.status} - ${errorText}`);
-    }
-    const userData = await userResponse.json();
-    const userId = userData.userId;
-
-    if (!userId) {
-      console.warn("User ID not found for email:", userEmail);
-      return "User ID not found for email:";
-    }
-
-    // --- Fetch User Collectible Data ---
-    const userCollectibleResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/db/userCollectible?userId=${userId}`, {
-      method: 'GET'
+      // No 'headers' needed here.
     });
 
     if (!userCollectibleResponse.ok) {
       const errorText = await userCollectibleResponse.text();
-      throw new Error(`Failed to fetch user collectible: ${userCollectibleResponse.status} - ${errorText}`);
+      console.error("Failed to fetch user collectible:", userCollectibleResponse.status, errorText);
+      throw new Error(`Failed to fetch user collectible: ${userCollectibleResponse.status}`);
     }
     const userCollectibleData = await userCollectibleResponse.json();
     const collectibleId = userCollectibleData.collectibleId;
 
     if (!collectibleId) {
-      console.warn("Collectible ID not found for user:", userId);
+      console.warn("Collectible ID not found for user.");
       return "Collectible ID not found for user";
     }
 
-    // --- Fetch Collectible Data ---
     const collectibleResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/db/collectible?collectibleId=${collectibleId}`, {
-      method: 'GET'
+      method: 'GET',
+      // No 'headers' needed here.
     });
 
     if (!collectibleResponse.ok) {
       const errorText = await collectibleResponse.text();
-      throw new Error(`Failed to fetch collectible details: ${collectibleResponse.status} - ${errorText}`);
+      console.error("Failed to fetch collectible details:", collectibleResponse.status, errorText);
+      throw new Error(`Failed to fetch collectible details: ${collectibleResponse.status}`);
     }
     const collectibleData = await collectibleResponse.json();
-    const collectibleUrl = collectibleData.objectUrl;
+    return collectibleData.objectUrl;
 
-    return collectibleUrl; // This now returns from the main async function
   } catch (error) {
     console.error("Error in getCollectibleUrl:", error);
-    // Depending on your error handling strategy, you might rethrow, return null, or a default value
-    return "Error in getCollectibleUrl"; // Return null on error, or throw error if you want to propagate it
+    return null;
   }
 }
 
 export default async function RootPage() {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   if (!session) {
     redirect('/login');
   }
