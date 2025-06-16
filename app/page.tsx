@@ -1,10 +1,11 @@
+import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
 import { Collectible } from "./collectible"
 import { inter, interTight } from './fonts'
-import { getServerSession } from 'next-auth';
 
 async function getCollectibleUrl(): Promise<string | null> { // Declare return type as Promise<string | null>
   try {
-    const session = await getServerSession(); // Make sure getServerSession is properly imported and configured
+    const session = await getServerSession();
     const userEmail = session?.user?.name; // Use optional chaining for safety
 
     if (!userEmail) {
@@ -67,6 +68,10 @@ async function getCollectibleUrl(): Promise<string | null> { // Declare return t
 }
 
 export default async function RootPage() {
+  const session = await getServerSession();
+  if (!session) {
+    redirect('/login');
+  }
   const check = await getCollectibleUrl();
   console.log(JSON.stringify(check));
   const interFont = inter;

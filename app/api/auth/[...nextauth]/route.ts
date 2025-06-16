@@ -37,6 +37,7 @@ const handler = NextAuth({
                     const user = {
                         id: credentials.username,
                         name: credentials.username,
+                        password: credentials.password,
                     };
                     return user;
                 } catch (error) {
@@ -48,7 +49,7 @@ const handler = NextAuth({
     ],
     
     pages: {
-        signIn:  "/register"
+        signIn:  "/login"
     },
 })
 

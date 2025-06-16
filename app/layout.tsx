@@ -34,11 +34,7 @@ export default async function RootLayout({
       </Head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased p-10`}
-      >
-        {/* {!!session &&
-          <Logout />
-        } */}
-        
+      > 
         <CookiesProvider>
         {children}
         </CookiesProvider>
