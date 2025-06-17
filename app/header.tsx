@@ -1,46 +1,46 @@
+'use client'
+
 import Link from 'next/link';
 import Image from 'next/image';
-import { getServerSession } from 'next-auth';
-import { authOptions } from './api/auth/[...nextauth]/route';
+import { useSession } from 'next-auth/react';
 import { inter } from './fonts';
-import { ThemeToggleButton } from './theme-toggle-button';
 import LogoutButton from './logout-button';
+import { ThemeToggleButton } from './theme-toggle-button';
+import { useAuthModal } from '@/app/contexts/AuthModalContext';
 
-export default async function Header() {
-  const session = await getServerSession(authOptions);
+export default function Header() {
+  const { data: session } = useSession();
+  const { openModal } = useAuthModal();
 
   return (
     <header className={`${inter.className} w-full py-4`}>
       <nav className="container mx-auto flex justify-between items-center">
-        {/* Left side: App Icon */}
+        {/* ... your logo code ... */}
         <Link href="/">
           <div className="relative h-10 w-24">
-            <Image
-              src="/images/logoSm.png" // Make sure this path is correct
-              alt="UBU Logo"
-              fill
-              style={{ objectFit: 'contain' }}
-            />
+            <div className="block dark:hidden">
+              <Image src="/images/ubuLogoBlack.png" alt="UBU Logo" fill style={{ objectFit: 'contain' }} priority/>
+            </div>
+            <div className="hidden dark:block">
+              <Image src="/images/ubuLogoWhite.png" alt="UBU Logo" fill style={{ objectFit: 'contain' }} priority/>
+            </div>
           </div>
         </Link>
 
-        {/* Right side: Navigation Links */}
         <div className="flex items-center space-x-4 text-sm">
-          <ThemeToggleButton />
           {session ? (
-            // Links for logged-in users
             <>
-              <Link href="/main" className="font-semibold hover:text-gray-700 transition-colors">
-                Dashboard
-              </Link>
+              {/* You could add a dashboard link here if needed */}
               <LogoutButton />
             </>
           ) : (
-            // Link for logged-out users
-            <Link href="/login" className="font-semibold hover:text-gray-700 transition-colors">
+            // Change Link to a button that opens the modal
+            <button onClick={() => openModal('/')} className="font-semibold text-foreground/80 hover:text-foreground transition-colors">
               Login
-            </Link>
+            </button>
           )}
+
+          <ThemeToggleButton />
         </div>
       </nav>
     </header>

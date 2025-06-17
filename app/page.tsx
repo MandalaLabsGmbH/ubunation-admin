@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import Image from 'next/image'
 import { Button } from "@/components/ui/button";
+import BuyNowButton from "@/app/components/BuyNowButton";
 
 export default function UBUNΛTIONRootPage() {
   return (
@@ -59,8 +60,11 @@ export default function UBUNΛTIONRootPage() {
                  <div className="bg-blue-600 text-white text-center py-2 font-semibold">
                     ULT Dream Careers Lion Collection
                 </div>
-              <CardContent className="flex-grow pt-6 text-center">
-                <p className="text-gray-600">
+              <CardContent className="flex-grow text-center">
+                <div className="mt-4">
+                  <BuyNowButton />
+                </div>
+                <p className="pt-6 text-gray-600">
                   Empower Change, Join Our Mission to Build a Brighter Future through &apos;Access, Education and Dream for a Brighter Future!&apos;
                 </p>
               </CardContent>
@@ -78,8 +82,11 @@ export default function UBUNΛTIONRootPage() {
                  <div className="bg-green-500 text-white text-center py-2 font-semibold">
                     WFA Springbok
                 </div>
-              <CardContent className="flex-grow pt-6 text-center">
-                <p className="text-gray-600">
+               <CardContent className="flex-grow text-center">
+                <div className="mt-4">
+                  <BuyNowButton />
+                </div>
+                <p className="pt-6 text-gray-600">
                   Empower Cape Town&apos;s Youth. Support &apos;We Love Football Academy Foundation for Positive Change!&apos;
                 </p>
               </CardContent>
@@ -97,8 +104,11 @@ export default function UBUNΛTIONRootPage() {
                  <div className="bg-indigo-600 text-white text-center py-2 font-semibold">
                     UBUNΛTION Founders Token
                 </div>
-              <CardContent className="flex-grow pt-6 text-center">
-                <p className="text-gray-600">
+              <CardContent className="flex-grow text-center">
+                <div className="mt-4">
+                  <BuyNowButton />
+                </div>
+                <p className="pt-6 text-gray-600">
                     Join the Movement. Become a UBUNΛTION Founding Partner and Fuel Our &apos;Quest for Good&apos;.
                 </p>
               </CardContent>
