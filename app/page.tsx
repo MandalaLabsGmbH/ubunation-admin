@@ -1,75 +1,112 @@
-import { getServerSession } from 'next-auth';
-import { redirect } from 'next/navigation';
-import { authOptions } from "./api/auth/[...nextauth]/route"; 
-import { Collectible } from "./collectible"
-import { inter, interTight } from './fonts'
+import { Card, CardContent } from "@/components/ui/card";
+import Image from 'next/image'
+import { Button } from "@/components/ui/button";
 
-async function getCollectibleUrl(): Promise<string | null> { // Declare return type as Promise<string | null>
-  try {
- const userCollectibleResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/db/userCollectible`, {
-      method: 'GET',
-      // No 'headers' needed here.
-    });
+export default function UbunationPage() {
+  return (
+    <div className="bg-white text-gray-800 font-sans">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+        
+        {/* --- Hero Section --- */}
+        <section className="flex flex-col md:flex-row items-center justify-between gap-12 mb-20 md:mb-32">
+          {/* Text Content */}
+          <div className="md:w-1/2 text-center md:text-left">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
+              ULT Dream Careers Lion Collection by <span className="text-blue-600">UBUNɅTION</span>
+            </h1>
+            <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+              Get ready for the groundbreaking ULT Dream Careers Lion Collection, where dreams meet impact! Backed by the leading web3 investment firm, LGD DAO, UBUNATION is set to make a lasting impact on the lives of underprivileged children in Kenya. Your chance to empower youth, enable education, and make a difference just around the corner. The ULT Dream Careers collection features 10,000 unique digital collectible Lions representing diverse dream careers, all securely stored on the Polygon blockchain. Your donation not only gets you an exclusive digital collectible but also brings life-changing opportunities to the most deserving youth.
+            </p>
+            <Button className="bg-blue-600 text-white hover:bg-blue-700 px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition-transform transform hover:scale-105">
+              Create Now & Get Your ULT NFT
+            </Button>
+          </div>
+          
+          {/* Image Content */}
+          <div className="md:w-1/2 flex justify-center">
+            <Image 
+              src="/images/collect.png" 
+              alt="ULT Dream Careers Lion" 
+              className="rounded-lg shadow-2xl w-full max-w-md"
+              width={500}
+              height={500}
+            />
+          </div>
+        </section>
 
-    if (!userCollectibleResponse.ok) {
-      const errorText = await userCollectibleResponse.text();
-      console.error("Failed to fetch user collectible:", userCollectibleResponse.status, errorText);
-      throw new Error(`Failed to fetch user collectible: ${userCollectibleResponse.status}`);
-    }
-    const userCollectibleData = await userCollectibleResponse.json();
-    const collectibleId = userCollectibleData.collectibleId;
+        {/* --- Charity Campaigns Section --- */}
+        <section>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+              Discover UBUNATION: Uniting Hearts, Changing Lives –
+            </h2>
+            <p className="text-xl text-gray-600 mt-2">
+              Explore Our Current Charity Campaigns!
+            </p>
+          </div>
 
-    if (!collectibleId) {
-      console.warn("Collectible ID not found for user.");
-      return "Collectible ID not found for user";
-    }
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            {/* Card 1 */}
+            <Card className="w-full flex flex-col overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl">
+                <Image 
+                    src="/images/collect.png" 
+                    alt="Dream Careers Lion Collection" 
+                    className="w-full h-56 object-cover"
+                    width={500}
+                    height={500}
+                />
+                 <div className="bg-blue-600 text-white text-center py-2 font-semibold">
+                    ULT Dream Careers Lion Collection
+                </div>
+              <CardContent className="flex-grow pt-6 text-center">
+                <p className="text-gray-600">
+                  Empower Change, Join Our Mission to Build a Brighter Future through &apos;Access, Education and Dream for a Brighter Future!&apos;
+                </p>
+              </CardContent>
+            </Card>
 
-    const collectibleResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/db/collectible?collectibleId=${collectibleId}`, {
-      method: 'GET',
-      // No 'headers' needed here.
-    });
+            {/* Card 2 */}
+            <Card className="w-full flex flex-col overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl">
+                <Image 
+                    src="/images/collect.png" 
+                    alt="WFA Springbok" 
+                    className="w-full h-56 object-cover"
+                    width={500}
+                    height={500}
+                />
+                 <div className="bg-green-500 text-white text-center py-2 font-semibold">
+                    WFA Springbok
+                </div>
+              <CardContent className="flex-grow pt-6 text-center">
+                <p className="text-gray-600">
+                  Empower Cape Town&apos;s Youth. Support &apos;We Love Football Academy Foundation for Positive Change!&apos;
+                </p>
+              </CardContent>
+            </Card>
 
-    if (!collectibleResponse.ok) {
-      const errorText = await collectibleResponse.text();
-      console.error("Failed to fetch collectible details:", collectibleResponse.status, errorText);
-      throw new Error(`Failed to fetch collectible details: ${collectibleResponse.status}`);
-    }
-    const collectibleData = await collectibleResponse.json();
-    return collectibleData.objectUrl;
+            {/* Card 3 */}
+            <Card className="w-full flex flex-col overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl">
+                 <Image
+                    src="/images/collect.png"
+                    alt="UBUNATION Founders Token" 
+                    className="w-full h-56 object-cover"
+                    width={500}
+                    height={500}
+                />
+                 <div className="bg-indigo-600 text-white text-center py-2 font-semibold">
+                    UBUNATION Founders Token
+                </div>
+              <CardContent className="flex-grow pt-6 text-center">
+                <p className="text-gray-600">
+                    Join the Movement. Become a UBUNATION Founding Partner and Fuel Our &apos;Quest for Good&apos;.
+                </p>
+              </CardContent>
+            </Card>
 
-  } catch (error) {
-    console.error("Error in getCollectibleUrl:", error);
-    return null;
-  }
+          </div>
+        </section>
+      </main>
+    </div>
+  );
 }
-
-export default async function RootPage() {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    redirect('/login');
-  }
-  const check = await getCollectibleUrl();
-  console.log(JSON.stringify(check));
-  const interFont = inter;
-  const interTightFont = interTight;
-  const getUrl = await getCollectibleUrl()
-
-  return <div>
-    <section className="Collectible Preview pt-6"><Collectible url={getUrl ? getUrl : 'https://deins.s3.eu-central-1.amazonaws.com/Objects3d/kloppocar/KloppoCar_01.gltf'} /></section>
-    <section className={`${interTightFont.className} flex justify-center items-center` }>
-      <p className="text-2xl" >
-        Wer sammelt, gewinnt
-      </p>
-      </section>
-      <section className={`${interFont.className}`}>
-       <div className="flex justify-center items-center"> <p className=" pt-6 text-l text-bold font" >
-         Und du hast gerade deinen ersten Schritt gemacht
-        </p></div>
-        <div className="flex justify-center items-center max-w-200 mx-auto"> <p className=" pt-6 text-l font" >
-         Mit jeder weiteren Karte wächst deine Chance auf das Treffen mit <span className='font-bold'>Jürgen Klopp und andere exklusive Preise.</span> Tausche, sammle und sichere dir deinen Platz, sobald unsere App verfügbar ist. Wenn es soweit ist, informieren wir dich.
-        </p></div>
-      </section>
-    
-  </div>
-  
- }

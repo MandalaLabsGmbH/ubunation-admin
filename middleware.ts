@@ -3,34 +3,39 @@ import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
 export async function middleware(req: NextRequest) {
-  // Get the session token from the request
   const token = await getToken({ req, secret: process.env.AUTH_SECRET });
   const { pathname } = req.nextUrl;
 
-  const isAuthPage = pathname.startsWith('/login');
+  const isLoginPage = pathname.startsWith('/login');
+  const isRootPage = pathname === '/';
 
-  // If the user is authenticated (has a token)
-  if (token) {
-    // and tries to access an authentication page (like /login),
-    // redirect them to the root page.
-    if (isAuthPage) {
+  // --- Logged-Out User Logic ---
+  // If the user is not authenticated...
+  if (!token) {
+    // ...and they are trying to access any page that is NOT the login page or the root page...
+    if (!isLoginPage && !isRootPage) {
+      // ...redirect them to the root page. This fulfills Requirement #2.
       return NextResponse.redirect(new URL('/', req.url));
     }
   }
-  // If the user is not authenticated (no token)
-  else {
-    // and is trying to access a protected page (any page that isn't for auth),
-    // redirect them to the login page.
-    if (!isAuthPage) {
-      return NextResponse.redirect(new URL('/login', req.url));
+
+  // --- Logged-In User Logic ---
+  // If the user is authenticated...
+  if (token) {
+    // ...and they try to visit the login page...
+    if (isLoginPage) {
+      // ...redirect them to the main content page, as they are already logged in.
+      return NextResponse.redirect(new URL('/main', req.url));
     }
   }
-
-  // If none of the above conditions are met, allow the request to continue.
+  
+  // For all other cases (e.g., a logged-out user visiting '/' or '/login', 
+  // or a logged-in user visiting any page except '/login'), allow the request to continue.
+  // This fulfills Requirements #1 and #3.
   return NextResponse.next();
 }
 
-// Configure the middleware to run on specific paths
+// The matcher configuration remains the same and is correct.
 export const config = {
   matcher: [
     /*
@@ -38,9 +43,9 @@ export const config = {
      * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
      * - any path with a file extension (e.g., .png, .jpg, .svg)
+     * - favicon.ico (favicon file)
      */
-     '/((?!api|_next/static|_next/image|.*\\..*|favicon.ico).*)',
+    '/((?!api|_next/static|_next/image|.*\\..*|favicon.ico).*)',
   ],
 };

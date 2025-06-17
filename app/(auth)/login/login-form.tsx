@@ -31,7 +31,7 @@ export default function LoginForm() {
             setError("Failed to login. Please check your credentials.");
             console.error(response.error);
         } else {
-            router.push("/");
+            router.push("/main");
             router.refresh();
         }
     };

@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 // import { getServerSession } from "next-auth";
 import { CookiesProvider } from "next-client-cookies/server"
+import Header from "./header"; 
 import Footer from "./footer";
 
 const geistSans = Geist({
@@ -35,9 +36,12 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased p-10`}
       > 
+      <Header />
+      <main className="flex-grow">
         <CookiesProvider>
         {children}
         </CookiesProvider>
+        </main>
         <footer>
         <Footer />
       </footer>
