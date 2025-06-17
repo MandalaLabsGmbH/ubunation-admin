@@ -60,16 +60,25 @@ export default function LoginPage() {
     return (
         <div className="page">
             <div className="registerLogo w-1/2 max-w-xs mx-auto relative">
-                <Suspense fallback={<p>Loading logo...</p>}>
+            <div className="block dark:hidden"><Suspense fallback={<p>Loading logo...</p>}>
                         <Image
                             src="/images/ubuLogoBlack.png"
                             alt="Picture of a collectible"
                             width={1500}
                             height={1000}
                         />
-                    </Suspense>
+                    </Suspense></div>
+                    <div className="hidden dark:block"><Suspense fallback={<p>Loading logo...</p>}>
+                        <Image
+                            src="/images/ubuLogoWhite.png"
+                            alt="Picture of a collectible"
+                            width={1500}
+                            height={1000}
+                        />
+                    </Suspense></div>
+                
             </div>
-            <section className="flex justify-center items-center">
+            <section className="flex pt-10 justify-center items-center">
                 <p className="text-l font-bold">
                     Discover UBUNΛTION:
                 </p>

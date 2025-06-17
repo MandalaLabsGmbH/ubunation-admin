@@ -2,10 +2,9 @@ import type { Metadata } from "next";
 import Head from 'next/head';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-// import { getServerSession } from "next-auth";
-import { CookiesProvider } from "next-client-cookies/server"
-import Header from "./header"; 
 import Footer from "./footer";
+import Header from "./header";
+import { ThemeProvider } from "../theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Kloppocar: Wer sammelt, gewinnt",
+  title: "Ubunation",
   description: "Digital sammeln, real erleben!",
 };
 
@@ -27,24 +26,35 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const session = await getServerSession();
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <Head>
-        <meta name="viewport"  content="width=device-width, initial-scale=1.0"  />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
+      {/*
+        STEP 1: Apply theme-aware classes to the body.
+        'bg-background' and 'text-foreground' will now automatically switch
+        between your light and dark theme variables.
+      */}
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased p-10`}
-      > 
-      <Header />
-      <main className="flex-grow">
-        <CookiesProvider>
-        {children}
-        </CookiesProvider>
-        </main>
-        <footer>
-        <Footer />
-      </footer>
+        className={`${geistSans.variable} ${geistMono.variable} antialiased p-10 bg-background text-foreground transition-colors duration-300`}
+      >
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+        >
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            
+            <main className="flex-grow container mx-auto">
+                {children}
+            </main>
+            
+            <Footer />
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

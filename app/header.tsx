@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]/route';
 import { inter } from './fonts';
+import { ThemeToggleButton } from './theme-toggle-button';
 import LogoutButton from './logout-button';
 
 export default async function Header() {
@@ -15,7 +16,7 @@ export default async function Header() {
         <Link href="/">
           <div className="relative h-10 w-24">
             <Image
-              src="/images/ubuLogoBlack.png" // Make sure this path is correct
+              src="/images/logoSm.png" // Make sure this path is correct
               alt="UBU Logo"
               fill
               style={{ objectFit: 'contain' }}
@@ -24,7 +25,8 @@ export default async function Header() {
         </Link>
 
         {/* Right side: Navigation Links */}
-        <div className="flex items-center space-x-6 text-sm">
+        <div className="flex items-center space-x-4 text-sm">
+          <ThemeToggleButton />
           {session ? (
             // Links for logged-in users
             <>

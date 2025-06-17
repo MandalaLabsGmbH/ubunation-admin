@@ -43,7 +43,7 @@ async function getCollectibleUrl(): Promise<string | null> { // Declare return t
   }
 }
 
-export default async function RootPage() {
+export default async function Main() {
   const session = await getServerSession(authOptions);
   if (!session) {
     redirect('/login');
