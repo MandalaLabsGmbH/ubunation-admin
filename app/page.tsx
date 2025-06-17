@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import Image from 'next/image'
 import { Button } from "@/components/ui/button";
-import BuyNowButton from "@/app/components/BuyNowButton";
+import BuyNowButton from "@/app/components/UserButton";
 
 export default function UBUNΛTIONRootPage() {
   return (
@@ -18,9 +18,7 @@ export default function UBUNΛTIONRootPage() {
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
               Get ready for the groundbreaking ULT Dream Careers Lion Collection, where dreams meet impact! Backed by the leading web3 investment firm, LGD DAO, UBUNΛTION is set to make a lasting impact on the lives of underprivileged children in Kenya. Your chance to empower youth, enable education, and make a difference just around the corner. The ULT Dream Careers collection features 10,000 unique digital collectible Lions representing diverse dream careers, all securely stored on the Polygon blockchain. Your donation not only gets you an exclusive digital collectible but also brings life-changing opportunities to the most deserving youth.
             </p>
-            <Button className="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition-transform transform hover:scale-105">
-              Create Now & Get Your ULT NFT
-            </Button>
+             <BuyNowButton label="Create Now & Get Your ULT NFT" route='/purchase' />
           </div>
           
           {/* Image Content */}
@@ -62,7 +60,7 @@ export default function UBUNΛTIONRootPage() {
                 </div>
               <CardContent className="flex-grow text-center">
                 <div className="mt-4">
-                  <BuyNowButton />
+                  <BuyNowButton label="Buy Now" route='/purchase' />
                 </div>
                 <p className="pt-6 text-gray-600">
                   Empower Change, Join Our Mission to Build a Brighter Future through &apos;Access, Education and Dream for a Brighter Future!&apos;
@@ -84,7 +82,7 @@ export default function UBUNΛTIONRootPage() {
                 </div>
                <CardContent className="flex-grow text-center">
                 <div className="mt-4">
-                  <BuyNowButton />
+                <BuyNowButton label="Buy Now" route='/purchase' />
                 </div>
                 <p className="pt-6 text-gray-600">
                   Empower Cape Town&apos;s Youth. Support &apos;We Love Football Academy Foundation for Positive Change!&apos;
@@ -106,7 +104,7 @@ export default function UBUNΛTIONRootPage() {
                 </div>
               <CardContent className="flex-grow text-center">
                 <div className="mt-4">
-                  <BuyNowButton />
+                  <BuyNowButton label="Buy Now" route='/purchase' />
                 </div>
                 <p className="pt-6 text-gray-600">
                     Join the Movement. Become a UBUNΛTION Founding Partner and Fuel Our &apos;Quest for Good&apos;.
