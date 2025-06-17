@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import Image from 'next/image'
+import Link from 'next/link';
 import { headers } from 'next/headers'; // 1. Import the headers function
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/route";
@@ -78,13 +79,15 @@ export default async function UBUNΛTIONRootPage() {
           
           {/* Image Content */}
           <div className="md:w-1/2 flex justify-center">
+          <Link href='/springbok' className="hover:underline">
             <Image 
-              src="/images/collect.png" 
+              src="https://deins.s3.eu-central-1.amazonaws.com/images/ubu1.png" 
               alt="ULT Dream Careers Lion" 
               className="rounded-lg shadow-2xl w-full max-w-md"
               width={500}
               height={500}
             />
+          </Link>
           </div>
         </section>
 
@@ -103,13 +106,15 @@ export default async function UBUNΛTIONRootPage() {
             
             {/* Card 1 */}
             <Card className="bg-white w-full flex flex-col overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl">
+                <Link href='/springbok2' className="hover:underline">
                 <Image 
-                    src="/images/collect.png" 
+                    src="https://deins.s3.eu-central-1.amazonaws.com/images/ubu2.png" 
                     alt="Dream Careers Lion Collection" 
                     className="w-full h-56 object-cover"
                     width={500}
                     height={500}
                 />
+                </Link>
                  <div className="bg-blue-600 text-white text-center py-2 font-semibold">
                     ULT Dream Careers Lion Collection
                 </div>
@@ -125,13 +130,15 @@ export default async function UBUNΛTIONRootPage() {
 
             {/* Card 2 */}
             <Card className="bg-white w-full flex flex-col overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl">
+                <Link href='/springbok3' className="hover:underline">
                 <Image 
-                    src="/images/collect.png" 
+                    src="https://deins.s3.eu-central-1.amazonaws.com/images/ubu3.png" 
                     alt="WFA Springbok" 
                     className="w-full h-56 object-cover"
                     width={500}
                     height={500}
                 />
+                </Link>
                  <div className="bg-green-500 text-white text-center py-2 font-semibold">
                     WFA Springbok
                 </div>
@@ -147,13 +154,15 @@ export default async function UBUNΛTIONRootPage() {
 
             {/* Card 3 */}
             <Card className="bg-white w-full flex flex-col overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl">
+                 <Link href='/springbok4' className="hover:underline">
                  <Image
-                    src="/images/collect.png"
+                    src="https://deins.s3.eu-central-1.amazonaws.com/images/ubu4.png"
                     alt="UBUNΛTION Founders Token" 
                     className="w-full h-56 object-cover"
                     width={500}
                     height={500}
                 />
+                </Link>
                  <div className="bg-indigo-600 text-white text-center py-2 font-semibold">
                     UBUNΛTION Founders Token
                 </div>

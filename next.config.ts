@@ -7,6 +7,16 @@ const nextConfig: NextConfig = {
     CLIENT_ID: process.env.CLIENT_ID,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'deins.s3.eu-central-1.amazonaws.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
 };
 
 export default nextConfig;
