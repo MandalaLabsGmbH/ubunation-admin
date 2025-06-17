@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
             headers: { 'Authorization': `Bearer ${token.accessToken}` }
         });
 
-        const objectUrl = userResponse.data.embedRef['url'];
+        const objectUrl = userResponse.data.imageRef['url'];
         return NextResponse.json({ message: 'success', objectUrl: objectUrl });
     } catch (e) {
         console.log({ e });

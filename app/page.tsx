@@ -1,9 +1,64 @@
 import { Card, CardContent } from "@/components/ui/card";
 import Image from 'next/image'
-import { Button } from "@/components/ui/button";
-import BuyNowButton from "@/app/components/UserButton";
+import { headers } from 'next/headers'; // 1. Import the headers function
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]/route";
+import UserButton from "@/app/components/UserButton";
 
-export default function UBUNΛTIONRootPage() {
+async function getCollectibleUrl(): Promise<string | null> {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) {
+    return null;
+  }
+
+  try {
+    const requestHeaders = await headers();
+    const cookie = requestHeaders.get('cookie');
+    const apiHeaders = new Headers();
+    if (cookie) {
+      apiHeaders.append('Cookie', cookie);
+    }
+    
+    const userCollectibleResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/db/userCollectible`, {
+      method: 'GET',
+      headers: apiHeaders
+    });
+
+    if (!userCollectibleResponse.ok) {
+      const errorText = await userCollectibleResponse.text();
+      console.error("Failed to fetch user collectible:", userCollectibleResponse.status, errorText);
+      return null;
+    }
+    const userCollectibleData = await userCollectibleResponse.json();
+    const collectibleId = userCollectibleData.collectibleId;
+
+    if (!collectibleId) {
+      console.warn("Collectible ID not found for user.");
+      return "Collectible ID not found for user";
+    }
+
+    const collectibleResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/db/collectible?collectibleId=${collectibleId}`, {
+      method: 'GET',
+      headers: apiHeaders, 
+    });
+
+    if (!collectibleResponse.ok) {
+      const errorText = await collectibleResponse.text();
+      console.error("Failed to fetch collectible details:", collectibleResponse.status, errorText);
+      return null;
+    }
+    const collectibleData = await collectibleResponse.json();
+    return collectibleData.objectUrl;
+
+  } catch (error) {
+    console.error("Error in getCollectibleUrl:", error);
+    return null;
+  }
+}
+
+export default async function UBUNΛTIONRootPage() {
+  const check = await getCollectibleUrl();
+  console.log('Collectible URL check result:', JSON.stringify(check));
   return (
     <div className="text-gray-800 font-sans">
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
@@ -18,7 +73,7 @@ export default function UBUNΛTIONRootPage() {
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
               Get ready for the groundbreaking ULT Dream Careers Lion Collection, where dreams meet impact! Backed by the leading web3 investment firm, LGD DAO, UBUNΛTION is set to make a lasting impact on the lives of underprivileged children in Kenya. Your chance to empower youth, enable education, and make a difference just around the corner. The ULT Dream Careers collection features 10,000 unique digital collectible Lions representing diverse dream careers, all securely stored on the Polygon blockchain. Your donation not only gets you an exclusive digital collectible but also brings life-changing opportunities to the most deserving youth.
             </p>
-             <BuyNowButton label="Create Now & Get Your ULT NFT" route='/purchase' />
+             <UserButton label="Create Now & Get Your ULT NFT" route='/purchase' />
           </div>
           
           {/* Image Content */}
@@ -60,7 +115,7 @@ export default function UBUNΛTIONRootPage() {
                 </div>
               <CardContent className="flex-grow text-center">
                 <div className="mt-4">
-                  <BuyNowButton label="Buy Now" route='/purchase' />
+                  <UserButton label="Buy Now" route='/purchase' />
                 </div>
                 <p className="pt-6 text-gray-600">
                   Empower Change, Join Our Mission to Build a Brighter Future through &apos;Access, Education and Dream for a Brighter Future!&apos;
@@ -82,7 +137,7 @@ export default function UBUNΛTIONRootPage() {
                 </div>
                <CardContent className="flex-grow text-center">
                 <div className="mt-4">
-                <BuyNowButton label="Buy Now" route='/purchase' />
+                <UserButton label="Buy Now" route='/purchase' />
                 </div>
                 <p className="pt-6 text-gray-600">
                   Empower Cape Town&apos;s Youth. Support &apos;We Love Football Academy Foundation for Positive Change!&apos;
@@ -104,7 +159,7 @@ export default function UBUNΛTIONRootPage() {
                 </div>
               <CardContent className="flex-grow text-center">
                 <div className="mt-4">
-                  <BuyNowButton label="Buy Now" route='/purchase' />
+                  <UserButton label="Buy Now" route='/purchase' />
                 </div>
                 <p className="pt-6 text-gray-600">
                     Join the Movement. Become a UBUNΛTION Founding Partner and Fuel Our &apos;Quest for Good&apos;.
