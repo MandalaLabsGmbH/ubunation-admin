@@ -5,29 +5,21 @@ const API_BASE_URL = process.env.API_BASE_URL;
 
 export async function GET(request: NextRequest) {
     try {
+
         const { searchParams } = new URL(request.url);
-        const collectibleId = searchParams.get("collectibleId");
         const collectionId = searchParams.get("collectionId");
 
-        // Case 1: Fetch a single collectible by its ID.
-        if (collectibleId) {
-            const response = await axios.get(`${API_BASE_URL}/Collectible/getCollectibleByCollectibleId`, {
-                params: { collectibleId }
-            });
-            return NextResponse.json(response.data);
+        // Check if the collectionId is provided in the request.
+        if (!collectionId) {
+            return NextResponse.json({ message: 'Bad Request: collectionId must be provided' }, { status: 400 });
         }
-        
-        // Case 2: Fetch all collectibles in a collection.
-        if (collectionId) {
-            const response = await axios.get(`${API_BASE_URL}/Collectible/getCollectiblesByCollection`, {
-                params: { collectionId }
-            });
-            return NextResponse.json(response.data);
-        }
-        
-        // Case 3: Fetch ALL collectibles if no specific ID is provided.
-        // This is the default behavior.
-        const response = await axios.get(`${API_BASE_URL}/Collectible/getAllCollectibles`);
+
+        // Make the API call to get the collection data.
+        const response = await axios.get(`${API_BASE_URL}/Collection/getCollectionByCollectionId`, {
+            params: { collectionId },
+        });
+
+        // Return the successful response data.
         return NextResponse.json(response.data);
 
     } catch (e) {

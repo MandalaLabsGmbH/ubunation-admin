@@ -3,19 +3,34 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
-import UserButton from './UserButton'; // Ensure this path is correct
+import { useCart } from '@/app/contexts/CartContext';
+import { Button } from '@/components/ui/button';
 
-// Define the props the template will accept
+// Define the props the template will accept as individual properties
 interface CampaignTemplateProps {
-  title: string;
+  collectibleId: number;
+  name: string;
   imageUrl: string;
   descriptionHtml: string;
 }
 
 type Tab = 'overview' | 'splits';
 
-export default function CampaignTemplate({ title, imageUrl, descriptionHtml }: CampaignTemplateProps) {
+// Destructure the individual props directly in the function signature
+export default function CampaignTemplate({ collectibleId, name, imageUrl, descriptionHtml }: CampaignTemplateProps) {
   const [activeTab, setActiveTab] = useState<Tab>('overview');
+  const { addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    // Use the individual props to add the item to the cart
+    addToCart({
+      collectibleId: collectibleId,
+      name: name,
+      imageUrl: imageUrl,
+      price: 9.99, // Static price as requested
+    });
+    alert(`${name} has been added to your cart!`);
+  };
 
   return (
     <div className="w-full max-w-7xl mx-auto py-8 px-4">
@@ -23,10 +38,11 @@ export default function CampaignTemplate({ title, imageUrl, descriptionHtml }: C
       <Card className="bg-card shadow-lg rounded-lg mb-8">
         <CardContent className="p-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-32">
-              <UserButton label="Donate" route="/purchase" />
+            <div className="w-48 flex gap-2">
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition-transform transform hover:scale-105" onClick={handleAddToCart}>Add to Cart</Button>
             </div>
-            <h1 className="text-xl md:text-2xl font-bold text-foreground">{title}</h1>
+            {/* Use the `name` prop directly */}
+            <h1 className="text-xl md:text-2xl font-bold text-foreground">{name}</h1>
           </div>
         </CardContent>
       </Card>
@@ -60,24 +76,18 @@ export default function CampaignTemplate({ title, imageUrl, descriptionHtml }: C
       {/* Tab Content */}
       <div>
         {activeTab === 'overview' && (
-          // We now use a grid to hold two separate cards
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-            
-            {/* Left Column: Image Card */}
             <div className="md:col-span-1">
               <Card className="bg-card shadow-lg rounded-lg overflow-hidden">
-                {/* The Image component now dictates the size of the card */}
                 <Image
                   src={imageUrl}
-                  alt={title}
-                  width={800} // Intrinsic width of the image
-                  height={800} // Intrinsic height of the image
-                  className="w-full h-auto" // Ensures the image is responsive
+                  alt={name}
+                  width={800}
+                  height={800}
+                  className="w-full h-auto"
                 />
               </Card>
             </div>
-
-            {/* Right Column: Description Card */}
             <div className="md:col-span-2">
               <Card className="bg-card shadow-lg rounded-lg w-full">
                 <CardContent className="p-6 md:p-8">
