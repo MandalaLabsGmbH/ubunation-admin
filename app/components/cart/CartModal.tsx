@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useCart, CartItem } from '@/app/contexts/CartContext';
-import { usePayment } from '@/app/contexts/PaymentContext'; // Import the new payment hook
+import { usePayment } from '@/app/contexts/PaymentContext';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { X, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -54,7 +54,7 @@ function CartItemRow({ item, onRemove }: { item: CartItem; onRemove: (id: number
 
 export default function CartModal() {
   const { isOpen, closeCart, cartItems, clearCart, itemCount, removeFromCart } = useCart();
-  const { startPaymentProcess } = usePayment(); // Get the payment function
+  const { setPaymentView, resetPayment } = usePayment(); // Get payment context functions
   const [showConfirm, setShowConfirm] = useState(false);
 
   if (!isOpen) return null;
@@ -66,7 +66,9 @@ export default function CartModal() {
 
   const handleCheckout = () => {
     closeCart(); // Close the cart modal
-    startPaymentProcess(cartItems); // Start the payment process
+    resetPayment(); // Ensure payment modal is in its initial state
+    setPaymentView('SELECT_METHOD'); // Set the view to method selection
+    // The context's `isPaymentOpen` will be handled by the payment flow itself
   };
   
   const totalPrice = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);

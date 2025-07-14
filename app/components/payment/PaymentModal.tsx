@@ -1,15 +1,15 @@
 'use client'
 
 import { usePayment } from '@/app/contexts/PaymentContext';
+import { useCart } from '@/app/contexts/CartContext'; // We need the cart items
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { X, CheckCircle, XCircle } from 'lucide-react';
 import Image from 'next/image';
-import StripePaymentForm from './StripePaymentForm'; // We will create this next
+import StripePaymentForm from './StripePaymentForm';
 
-// Make sure to use your Stripe publishable key
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 
 export default function PaymentModal() {
@@ -28,7 +28,6 @@ export default function PaymentModal() {
 
   const handleCloseAndReset = () => {
       closePayment();
-      // Use a timeout to reset state after the modal has closed to avoid visual glitches
       setTimeout(resetPayment, 300);
   }
 
@@ -36,7 +35,7 @@ export default function PaymentModal() {
     switch (paymentView) {
       case 'SELECT_METHOD':
         return <SelectMethodView />;
-      
+
       case 'STRIPE_PAYMENT':
         if (!clientSecret) {
             return <ErrorView message="Could not initialize payment. Please try again." onRetry={resetPayment} onClose={handleCloseAndReset} />;
@@ -88,18 +87,20 @@ export default function PaymentModal() {
 
 // Sub-component for selecting a payment method
 function SelectMethodView() {
-    // In a real app, these would call functions to start their respective payment flows
+    const { startStripePayment, startPaypalPayment } = usePayment();
+    const { cartItems } = useCart();
+
     return (
         <div>
             <h2 className="text-2xl font-bold text-center mb-6">Choose Payment Method</h2>
             <div className="grid gap-4">
-                <Button variant="outline" className="h-14 text-lg" onClick={() => alert('Stripe logic will be handled by the checkout button.')}>
+                <Button variant="outline" className="h-14 text-lg justify-center flex items-center" onClick={() => startStripePayment(cartItems)}>
                     <Image src="/images/stripe-logo.svg" alt="Stripe" width={60} height={25} />
                 </Button>
-                <Button variant="outline" className="h-14 text-lg" disabled>
+                <Button variant="outline" className="h-14 text-lg justify-center flex items-center" onClick={() => startPaypalPayment(cartItems)}>
                     <Image src="/images/paypal-logo.svg" alt="PayPal" width={80} height={25} />
                 </Button>
-                 <Button variant="outline" className="h-14 text-lg" disabled>
+                 <Button variant="outline" className="h-14 text-lg justify-center flex items-center" disabled>
                     <Image src="/images/wallet-logo.svg" alt="Wallet" width={90} height={25} />
                 </Button>
             </div>

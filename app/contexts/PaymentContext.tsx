@@ -1,9 +1,8 @@
 'use client'
 
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { CartItem } from './CartContext'; // Assuming CartItem is exported from CartContext
+import { CartItem } from './CartContext';
 
-// Define the different views the payment modal can have
 export type PaymentView = 'SELECT_METHOD' | 'STRIPE_PAYMENT' | 'PROCESSING' | 'SUCCESS' | 'ERROR';
 
 interface PaymentContextType {
@@ -12,7 +11,8 @@ interface PaymentContextType {
   purchaseId: number | null;
   clientSecret: string | null;
   errorMessage: string | null;
-  startPaymentProcess: (cartItems: CartItem[]) => Promise<void>;
+  startStripePayment: (cartItems: CartItem[]) => Promise<void>;
+  startPaypalPayment: (cartItems: CartItem[]) => Promise<void>;
   setPaymentView: (view: PaymentView) => void;
   setErrorMessage: (message: string) => void;
   closePayment: () => void;
@@ -28,13 +28,13 @@ export function PaymentProvider({ children }: { children: ReactNode }) {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const startPaymentProcess = async (cartItems: CartItem[]) => {
-    setIsPaymentOpen(true);
-    setPaymentView('PROCESSING'); // Show processing while we talk to the backend
+  // This function now specifically handles Stripe
+  const startStripePayment = async (cartItems: CartItem[]) => {
+    if (!isPaymentOpen) setIsPaymentOpen(true);
+    setPaymentView('PROCESSING');
 
     try {
-      // Call our Next.js API route to initiate the purchase
-      const response = await fetch('/api/purchase', {
+      const response = await fetch('/api/purchase/stripe', { // Updated endpoint
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cart: cartItems }),
@@ -42,19 +42,47 @@ export function PaymentProvider({ children }: { children: ReactNode }) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to start payment process.');
+        throw new Error(errorData.message || 'Failed to start Stripe payment.');
       }
 
       const { purchaseId, clientSecret } = await response.json();
       
       setPurchaseId(purchaseId);
       setClientSecret(clientSecret);
-      setPaymentView('STRIPE_PAYMENT'); // Move to the Stripe payment view
+      setPaymentView('STRIPE_PAYMENT');
 
     } catch (error) {
-      console.error("Payment initiation error:", error);
+      console.error("Stripe initiation error:", error);
       setErrorMessage(error instanceof Error ? error.message : 'An unknown error occurred.');
       setPaymentView('ERROR');
+    }
+  };
+
+  // New function for PayPal
+  const startPaypalPayment = async (cartItems: CartItem[]) => {
+    if (!isPaymentOpen) setIsPaymentOpen(true);
+    setPaymentView('PROCESSING');
+
+    try {
+        const response = await fetch('/api/purchase/paypal', { // New endpoint for PayPal
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cart: cartItems }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to create PayPal order.');
+        }
+
+        const { approveUrl } = await response.json();
+        // Redirect the user to PayPal to approve the payment
+        window.location.href = approveUrl;
+
+    } catch (error) {
+        console.error("PayPal initiation error:", error);
+        setErrorMessage(error instanceof Error ? error.message : 'An unknown error occurred.');
+        setPaymentView('ERROR');
     }
   };
 
@@ -62,7 +90,6 @@ export function PaymentProvider({ children }: { children: ReactNode }) {
     setIsPaymentOpen(false);
   };
   
-  // Resets the modal to its initial state for a new purchase attempt
   const resetPayment = () => {
       setPaymentView('SELECT_METHOD');
       setPurchaseId(null);
@@ -76,7 +103,8 @@ export function PaymentProvider({ children }: { children: ReactNode }) {
     purchaseId,
     clientSecret,
     errorMessage,
-    startPaymentProcess, 
+    startStripePayment,
+    startPaypalPayment,
     setPaymentView,
     setErrorMessage,
     closePayment,
