@@ -66,7 +66,7 @@ export default function ConfirmRegisterForm({ email, password }: ConfirmRegister
             if (loginResponse?.error) {
                 throw new Error("Login failed after confirmation.");
             } else {
-                router.push("/main");
+                router.push("/");
                 router.refresh();
             }
         } catch (error) {

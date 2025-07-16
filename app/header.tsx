@@ -7,13 +7,10 @@ import { inter } from './fonts';
 import LogoutButton from './logout-button';
 import { ThemeToggleButton } from './theme-toggle-button';
 import { useAuthModal } from '@/app/contexts/AuthModalContext';
-import { useCart } from '@/app/contexts/CartContext'; // Import the useCart hook
-import { ShoppingCart } from 'lucide-react'; // Import an icon
 
 export default function Header() {
   const { data: session } = useSession();
-  const { openModal } = useAuthModal();
-  const { openCart, itemCount } = useCart(); // Get cart functions and state
+  const { openModal } = useAuthModal(); // Get cart functions and state
 
   return (
     <header className={`${inter.className} w-full py-4 border-b`}>
@@ -37,16 +34,6 @@ export default function Header() {
               Login
             </button>
           )}
-
-          {/* Shopping Cart Button */}
-          <button onClick={openCart} className="relative text-foreground/80 hover:text-foreground transition-colors">
-            <ShoppingCart className="h-5 w-5" />
-            {itemCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                {itemCount}
-              </span>
-            )}
-          </button>
 
           <ThemeToggleButton />
         </div>

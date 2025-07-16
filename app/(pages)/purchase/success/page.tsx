@@ -9,7 +9,7 @@ export default function PaymentSuccessPage() {
             <p className="text-lg text-muted-foreground mb-8">
                 Your order is being processed. You will receive an email confirmation shortly.
             </p>
-            <Link href="/main" className="bg-primary text-primary-foreground px-6 py-3 rounded-md font-semibold">
+            <Link href="/" className="bg-primary text-primary-foreground px-6 py-3 rounded-md font-semibold">
                 Go to My Collection
             </Link>
         </div>

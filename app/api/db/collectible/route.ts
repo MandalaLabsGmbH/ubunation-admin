@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
         const { searchParams } = new URL(request.url);
         const collectibleId = searchParams.get("collectibleId");
         const collectionId = searchParams.get("collectionId");
+        const projectId = searchParams.get("projectId"); // New parameter
 
         // Case 1: Fetch a single collectible by its ID.
         if (collectibleId) {
@@ -24,17 +25,21 @@ export async function GET(request: NextRequest) {
             });
             return NextResponse.json(response.data);
         }
+
+        // Case 3: (New) Fetch all collectibles in a project.
+        if (projectId) {
+            const response = await axios.get(`${API_BASE_URL}/Collectible/getCollectiblesByProjectId`, {
+                params: { projectId }
+            });
+            return NextResponse.json(response.data);
+        }
         
-        // Case 3: Fetch ALL collectibles if no specific ID is provided.
-        // This is the default behavior.
+        // Case 4: Fetch ALL collectibles if no specific ID is provided.
         const response = await axios.get(`${API_BASE_URL}/Collectible/getAllCollectibles`);
         return NextResponse.json(response.data);
 
     } catch (e) {
-        // Log the error for debugging purposes.
         console.error({ e });
-
-        // Handle Axios-specific errors to return a more informative response.
         if (axios.isAxiosError(e)) {
             const err = e as AxiosError;
             return NextResponse.json(
@@ -42,8 +47,6 @@ export async function GET(request: NextRequest) {
                 { status: err.response?.status || 500, statusText: "API call failed" }
             );
         }
-
-        // Handle generic errors.
         return NextResponse.json({ message: 'An internal server error occurred' }, { status: 500 });
     }
 }

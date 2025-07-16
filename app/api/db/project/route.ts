@@ -3,30 +3,47 @@ import axios, { AxiosError } from 'axios';
 
 const API_BASE_URL = process.env.API_BASE_URL;
 
+// Helper function to fetch a single project
+const fetchProjectById = (id: number) => {
+    return axios.get(`${API_BASE_URL}/Project/getProjectByProjectId`, {
+        params: { projectId: id },
+    });
+};
+
 export async function GET(request: NextRequest) {
     try {
-       
         const { searchParams } = new URL(request.url);
         const projectId = searchParams.get("projectId");
 
-        // Check if the projectId is provided in the request.
-        if (!projectId) {
-            return NextResponse.json({ message: 'Bad Request: projectId must be provided' }, { status: 400 });
+        // Case 1: Fetch a single project by its ID if provided in the URL
+        if (projectId) {
+            const response = await fetchProjectById(Number(projectId));
+            return NextResponse.json(response.data);
         }
 
-        // Make the API call to get the project data.
-        const response = await axios.get(`${API_BASE_URL}/Project/getProjectByProjectId`, {
-            params: { projectId },
+        // Case 2: (Temporary Demo Logic) If no ID is provided, fetch projects 1, 2, and 3
+        const projectIds = [1, 2, 3];
+        // Use Promise.allSettled to ensure all requests complete, even if one fails
+        const projectPromises = await Promise.allSettled(
+            projectIds.map(id => fetchProjectById(id))
+        );
+
+        const successfulProjects = projectPromises
+            .filter(result => result.status === 'fulfilled')
+            .map(result => result.value.data);
+        
+        // Log if any of the project fetches failed
+        projectPromises.forEach((result, index) => {
+            if (result.status === 'rejected') {
+                console.error(`Failed to fetch project with ID ${projectIds[index]}:`, result.reason);
+            }
         });
 
-        // Return the successful response data.
-        return NextResponse.json(response.data);
+        return NextResponse.json(successfulProjects);
 
     } catch (e) {
-        // Log the error for debugging purposes.
         console.error({ e });
 
-        // Handle Axios-specific errors to return a more informative response.
         if (axios.isAxiosError(e)) {
             const err = e as AxiosError;
             return NextResponse.json(
@@ -35,7 +52,6 @@ export async function GET(request: NextRequest) {
             );
         }
 
-        // Handle generic errors.
         return NextResponse.json({ message: 'An internal server error occurred' }, { status: 500 });
     }
 }

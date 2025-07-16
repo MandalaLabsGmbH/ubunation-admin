@@ -1,5 +1,6 @@
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { CognitoJwtVerifier } from "aws-jwt-verify";
 import { CognitoIdentityProviderClient, InitiateAuthCommand, AuthFlowType } from "@aws-sdk/client-cognito-identity-provider";
 import process from 'process';
 
@@ -51,27 +52,41 @@ export const authOptions: AuthOptions = {
             }
         })
     ],
-    callbacks: {
-        async jwt({ token, user }) {
-            // The 'user' object is only passed on the initial sign-in.
-            // We're taking the tokens from the 'user' object and putting them in the JWT 'token'.
-            if (user) {
-                token.idToken = user.IdToken;
+   callbacks: {
+        async jwt({ token, user, account }) {
+            if (account && user) {
                 token.accessToken = user.AccessToken;
+                token.idToken = user.IdToken;
                 token.refreshToken = user.RefreshToken;
             }
+            
+            // On subsequent calls, check the user's group from the idToken
+            if (token.idToken) {
+                const verifier = CognitoJwtVerifier.create({
+                    userPoolId: process.env.USER_POOL_ID!,
+                    tokenUse: "id",
+                    clientId: process.env.CLIENT_ID!,
+                });
+                try {
+                    const payload = await verifier.verify(token.idToken as string);
+                    token.userRole = (payload['cognito:groups'] as string[])?.includes('admin') ? 'admin' : 'user';
+                } catch (e) {
+                    console.error("Token verification failed:", e);
+                    token.userRole = 'user';
+                }
+            }
+
             return token;
         },
         async session({ session, token }) {
-            // The session callback makes the token data available on the client-side session object.
-            if (token) {
-                session.accessToken = token.accessToken as string;
-            }
+            session.accessToken = token.accessToken as string;
+            // @ts-expect-error : role is automatic
+            session.user.role = token.userRole; 
             return session;
         }
     },
     pages: {
-        signIn:  "/"
+        signIn:  "/login"
     },
 }
 

@@ -2,31 +2,37 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
- const protectedPathPatterns = [
-  /^\/purchase(\/.*)?$/, // Matches /purchase and any sub-path like /purchase/confirm
-  /^\/[a-zA-Z0-9_-]+_collection\/collectible\/(\d+)(\/.*)?$/, // Matches /lion_collection/collectible/1, etc.
-];
-
 export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
-  const { pathname } = req.nextUrl;
+    const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+    const { pathname } = req.nextUrl;
 
-  const isProtectedRoute = protectedPathPatterns.some(pattern => pattern.test(pathname));
+    // Define paths that are public and do not require authentication.
+    const publicPaths = ['/login', '/forgot'];
 
-  // If a user tries to go to the old /login or /main pages, redirect to root.
-  if (pathname.startsWith('/login') || pathname.startsWith('/main')) {
-    return NextResponse.redirect(new URL('/', req.url));
-  }
+    // Check if the requested path is one of the public paths.
+    const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
 
-  if (!token && isProtectedRoute) {
-    // ...redirect them to the root page. Any action on the root page
-    // that requires login will then trigger the modal.
-    return NextResponse.redirect(new URL('/', req.url));
-  }
- 
-  return NextResponse.next();
+    // If the path is public, allow the request to proceed.
+    if (isPublicPath) {
+        return NextResponse.next();
+    }
+
+    // For any non-public path, check if the user is an authenticated admin.
+    // The `userRole` property is added to the token in your NextAuth configuration.
+    if (!token || token.userRole !== 'admin') {
+        // If the user is not an authenticated admin, redirect them to the login page.
+        const loginUrl = new URL('/login', req.url);
+        // Optional: You can add a 'from' parameter to redirect back after login
+        loginUrl.searchParams.set('from', pathname);
+        return NextResponse.redirect(loginUrl);
+    }
+
+    // If the user is an authenticated admin, allow the request.
+    return NextResponse.next();
 }
 
+// This config ensures the middleware runs on all routes except for API routes
+// and static files, which is necessary for the app to function correctly.
 export const config = {
   matcher: [
     '/((?!api|_next/static|_next/image|.*\\..*|favicon.ico).*)',
