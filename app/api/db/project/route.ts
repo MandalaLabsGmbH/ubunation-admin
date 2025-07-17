@@ -1,5 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import axios, { AxiosError } from 'axios';
+import { getToken } from "next-auth/jwt";
 
 const API_BASE_URL = process.env.API_BASE_URL;
 
@@ -52,6 +53,39 @@ export async function GET(request: NextRequest) {
             );
         }
 
+        return NextResponse.json({ message: 'An internal server error occurred' }, { status: 500 });
+    }
+}
+
+export async function PATCH(request: NextRequest) {
+    try {
+        const token = await getToken({ req: request, secret: process.env.AUTH_SECRET });
+        if (!token || token.userRole !== 'admin') {
+            return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+        }
+
+        const body = await request.json();
+
+        // The body should contain projectId and any fields to update
+        if (!body.projectId) {
+            return NextResponse.json({ message: 'Bad Request: projectId is required' }, { status: 400 });
+        }
+
+        const response = await axios.patch(`${API_BASE_URL}/Project/updateProjectByProjectId`, body, {
+            headers: { 'Authorization': `Bearer ${token.accessToken}` }
+        });
+
+        return NextResponse.json(response.data);
+
+    } catch (e) {
+        console.error("Project PATCH error:", { e });
+        if (axios.isAxiosError(e)) {
+            const err = e as AxiosError;
+            return NextResponse.json(
+                { message: "API call failed", details: err.response?.data },
+                { status: err.response?.status || 500 }
+            );
+        }
         return NextResponse.json({ message: 'An internal server error occurred' }, { status: 500 });
     }
 }

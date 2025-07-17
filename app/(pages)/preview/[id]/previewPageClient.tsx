@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import CampaignTemplate from '@/app/components/CampaignTemplate';
 import ModifyCollectibleModal from '@/app/components/content/ModifyCollectibleModal';
-import { Collectible } from '@/app/components/content/ContentDropdowns'; // Reuse the type
+import { Collectible } from '@/app/(pages)/content/page';
 
 interface PreviewPageClientProps {
   collectible: Collectible;
@@ -21,6 +21,11 @@ export default function PreviewPageClient({ collectible }: PreviewPageClientProp
     setModalOpen(false);
     // Refresh the page data from the server to show the latest changes.
     router.refresh();
+  };
+
+  const handleSaveSuccess = () => {
+      setModalOpen(false); // Close the modal
+      router.refresh(); // Tell Next.js to re-fetch the data for this page
   };
 
   // Safely extract the English strings for rendering.
@@ -51,6 +56,7 @@ export default function PreviewPageClient({ collectible }: PreviewPageClientProp
         <ModifyCollectibleModal
           collectible={collectible}
           onClose={handleModalClose}
+          onSaveSuccess={handleSaveSuccess}
         />
       )}
     </div>
