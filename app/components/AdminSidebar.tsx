@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 const menuItems = [
   { name: 'Blockchain', href: '/blockchain' },
   { name: 'Content', href: '/content' },
+  { name: 'App Content', href: '/app-content' }, //  <-- Add this line
   { name: 'Statistics', href: '/statistics' },
   { name: 'Users', href: '/users' },
 ];

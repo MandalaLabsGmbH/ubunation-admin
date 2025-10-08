@@ -2,11 +2,11 @@ import { NextResponse, NextRequest } from "next/server";
 import axios, { AxiosError } from 'axios';
 import { getToken } from "next-auth/jwt";
 
-const API_BASE_URL = process.env.API_BASE_URL;
+const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 // Helper function to fetch a single project
 const fetchProjectById = (id: number) => {
-    return axios.get(`${API_BASE_URL}/Project/getProjectByProjectId`, {
+    return axios.get(`${NEXT_PUBLIC_API_BASE_URL}/Project/getProjectByProjectId`, {
         params: { projectId: id },
     });
 };
@@ -71,7 +71,7 @@ export async function PATCH(request: NextRequest) {
             return NextResponse.json({ message: 'Bad Request: projectId is required' }, { status: 400 });
         }
 
-        const response = await axios.patch(`${API_BASE_URL}/Project/updateProjectByProjectId`, body, {
+        const response = await axios.patch(`${NEXT_PUBLIC_API_BASE_URL}/Project/updateProjectByProjectId`, body, {
             headers: { 'Authorization': `Bearer ${token.accessToken}` }
         });
 

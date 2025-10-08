@@ -2,7 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import axios, { AxiosError } from 'axios';
 import { getToken } from "next-auth/jwt";
 
-const API_BASE_URL = process.env.API_BASE_URL;
+const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function GET(request: NextRequest) {
     try {
@@ -13,14 +13,14 @@ export async function GET(request: NextRequest) {
 
         const headers = { 'Authorization': `Bearer ${token.accessToken}` };
 
-        const userResponse = await axios.get(`${API_BASE_URL}/User/getUserByEmail?email=${token.email}`, { headers });
+        const userResponse = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/User/getUserByEmail?email=${token.email}`, { headers });
         const userId = userResponse.data.userId;
 
         if (!userId) {
             return NextResponse.json({ message: "User not found" }, { status: 404 });
         }
         
-        const userCollectibleResponse = await axios.get(`${API_BASE_URL}/UserCollectible/getUserCollectiblesByOwnerId?ownerId=${userId}`, { headers });
+        const userCollectibleResponse = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/UserCollectible/getUserCollectiblesByOwnerId?ownerId=${userId}`, { headers });
 
         const collectibleId = userCollectibleResponse.data[0].collectibleId;
         console.log(userCollectibleResponse.data[0].collectibleId);
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
         const { userId, collectibleId, mint } = await request.json();
         
-        await axios.post(`${API_BASE_URL}/UserCollectible/createUserCollectible`, {
+        await axios.post(`${NEXT_PUBLIC_API_BASE_URL}/UserCollectible/createUserCollectible`, {
             "ownerId": userId,
             "collectibleId": collectibleId,
             "mint": mint

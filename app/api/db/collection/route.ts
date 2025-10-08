@@ -2,25 +2,32 @@ import { NextResponse, NextRequest } from "next/server";
 import axios, { AxiosError } from 'axios';
 import { getToken } from "next-auth/jwt";
 
-const API_BASE_URL = process.env.API_BASE_URL;
+const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function GET(request: NextRequest) {
     try {
-
         const { searchParams } = new URL(request.url);
-        const collectionId = searchParams.get("collectionId");
+        const limit = searchParams.get("limit");
+        const collectionId = searchParams.get("collectionId"); // Check for a specific collectionId
 
-        // Check if the collectionId is provided in the request.
-        if (!collectionId) {
-            return NextResponse.json({ message: 'Bad Request: collectionId must be provided' }, { status: 400 });
+        // If a specific collectionId is requested, fetch that one.
+        if (collectionId) {
+            const response = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/Collection/getCollectionByCollectionId`, {
+                params: { collectionId },
+            });
+            return NextResponse.json(response.data);
         }
 
-        // Make the API call to get the collection data.
-        const response = await axios.get(`${API_BASE_URL}/Collection/getCollectionByCollectionId`, {
-            params: { collectionId },
-        });
-
-        // Return the successful response data.
+        // If a limit is provided, use the original logic for getting multiple collections.
+        if (limit) {
+            const response = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/Collection/getAllCollections`, {
+                params: { limit },
+            });
+            return NextResponse.json(response.data);
+        }
+        
+        // Default case: Get all collections if no specific parameters are given.
+        const response = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/Collection/getAllCollections`);
         return NextResponse.json(response.data);
 
     } catch (e) {
@@ -54,7 +61,7 @@ export async function PATCH(request: NextRequest) {
             return NextResponse.json({ message: 'Bad Request: collectionId is required' }, { status: 400 });
         }
 
-        const response = await axios.patch(`${API_BASE_URL}/Collection/updateCollectionByCollectionId`, body, {
+        const response = await axios.patch(`${NEXT_PUBLIC_API_BASE_URL}/Collection/updateCollectionByCollectionId`, body, {
             headers: { 'Authorization': `Bearer ${token.accessToken}` }
         });
 

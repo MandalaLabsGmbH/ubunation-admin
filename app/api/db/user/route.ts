@@ -2,7 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import axios, { AxiosError } from 'axios';
 import { getToken } from "next-auth/jwt";
 
-const API_BASE_URL = process.env.API_BASE_URL;
+const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function GET(request: NextRequest) {
         try {
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
         
         const email = token.email;
         
-        const userResponse = await axios.get(`${API_BASE_URL}/User/getUserByEmail?email=${email}`, {
+        const userResponse = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/User/getUserByEmail?email=${email}`, {
             headers: { 'Authorization': `Bearer ${token.accessToken}` }
         });
 
@@ -34,7 +34,7 @@ export async function PATCH(request: NextRequest) {
         
         const { email, token: authToken } = await request.json();
         
-        await axios.post(`${API_BASE_URL}/User/updateUserByUsername`, {
+        await axios.post(`${NEXT_PUBLIC_API_BASE_URL}/User/updateUserByUsername`, {
            "username": email,
            "authToken": authToken,
         }, {

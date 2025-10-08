@@ -2,7 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import axios, { AxiosError } from 'axios';
 import { getToken } from "next-auth/jwt";
 
-const API_BASE_URL = process.env.API_BASE_URL;
+const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function GET(request: NextRequest) {
     try {
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 
         // Case 1: Fetch a single collectible by its ID.
         if (collectibleId) {
-            const response = await axios.get(`${API_BASE_URL}/Collectible/getCollectibleByCollectibleId`, {
+            const response = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/Collectible/getCollectibleByCollectibleId`, {
                 params: { collectibleId }
             });
             return NextResponse.json(response.data);
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
         
         // Case 2: Fetch all collectibles in a collection.
         if (collectionId) {
-            const response = await axios.get(`${API_BASE_URL}/Collectible/getCollectiblesByCollection`, {
+            const response = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/Collectible/getCollectiblesByCollection`, {
                 params: { collectionId }
             });
             return NextResponse.json(response.data);
@@ -29,14 +29,14 @@ export async function GET(request: NextRequest) {
 
         // Case 3: (New) Fetch all collectibles in a project.
         if (projectId) {
-            const response = await axios.get(`${API_BASE_URL}/Collectible/getCollectiblesByProjectId`, {
+            const response = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/Collectible/getCollectiblesByProjectId`, {
                 params: { projectId }
             });
             return NextResponse.json(response.data);
         }
         
         // Case 4: Fetch ALL collectibles if no specific ID is provided.
-        const response = await axios.get(`${API_BASE_URL}/Collectible/getAllCollectibles`);
+        const response = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/Collectible/getAllCollectibles`);
         return NextResponse.json(response.data);
 
     } catch (e) {
@@ -65,7 +65,7 @@ export async function PATCH(request: NextRequest) {
             return NextResponse.json({ message: 'Bad Request: collectibleId is required' }, { status: 400 });
         }
 
-        const response = await axios.patch(`${API_BASE_URL}/Collectible/updateCollectibleByCollectibleId`, body, {
+        const response = await axios.patch(`${NEXT_PUBLIC_API_BASE_URL}/Collectible/updateCollectibleByCollectibleId`, body, {
             headers: { 'Authorization': `Bearer ${token.accessToken}` }
         });
 
