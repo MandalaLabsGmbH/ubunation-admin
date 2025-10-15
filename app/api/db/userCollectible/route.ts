@@ -6,7 +6,7 @@ const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function GET(request: NextRequest) {
     try {
-        const token = await getToken({ req: request, secret: process.env.AUTH_SECRET });
+        const token = await getToken({ req: request, secret: process.env.NEXT_PUBLIC_SECRET });
         if (!token?.accessToken) {
             return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
         }
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
     try {
-        const token = await getToken({ req: request, secret: process.env.AUTH_SECRET });
+        const token = await getToken({ req: request, secret: process.env.NEXT_PUBLIC_SECRET });
         if (!token?.accessToken) {
             return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
         }

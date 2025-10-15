@@ -6,7 +6,7 @@ const CREATE_PAYPAL_ORDER_URL = process.env.CREATE_PAYPAL_ORDER_LAMBDA_URL;
 
 export async function POST(request: NextRequest) {
     try {
-        const token = await getToken({ req: request, secret: process.env.AUTH_SECRET });
+        const token = await getToken({ req: request, secret: process.env.NEXT_PUBLIC_SECRET });
         const { cart } = await request.json();
 
         if (!cart || cart.length === 0) {

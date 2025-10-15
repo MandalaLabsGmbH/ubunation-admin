@@ -6,8 +6,8 @@ import {
 } from 'amazon-cognito-identity-js';
 
 
-const poolId = process.env.USER_POOL_ID;
-const clientId = process.env.CLIENT_ID;
+const poolId = process.env.NEXT_PUBLIC_USER_POOL_ID;
+const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
 
 function dec2hex (dec: { toString: (arg0: number) => string; }) {
     return dec.toString(16).padStart(2, "0")

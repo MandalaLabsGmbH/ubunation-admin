@@ -5,7 +5,7 @@ import { CognitoIdentityProviderClient, InitiateAuthCommand, AuthFlowType } from
 import process from 'process';
 
 export const authOptions: AuthOptions = {
-    secret: process.env.AUTH_SECRET,
+    secret: process.env.NEXT_PUBLIC_SECRET,
     providers: [
         CredentialsProvider({
             name: "credentials",
@@ -24,13 +24,13 @@ export const authOptions: AuthOptions = {
 
                 const params = {
                     AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
-                    ClientId: process.env.CLIENT_ID!,
+                    ClientId: process.env.NEXT_PUBLIC_CLIENT_ID!,
                     AuthParameters: {
                         USERNAME: credentials.username,
                         PASSWORD: credentials.password,
                     },
                 };
-                //CLIENT_ID is COGNITO_CLIENT_ID
+                //NEXT_PUBLIC_CLIENT_ID is COGNITO_NEXT_PUBLIC_CLIENT_ID
 
                 try {
                     const command = new InitiateAuthCommand(params);
@@ -63,9 +63,9 @@ export const authOptions: AuthOptions = {
             // On subsequent calls, check the user's group from the idToken
             if (token.idToken) {
                 const verifier = CognitoJwtVerifier.create({
-                    userPoolId: process.env.USER_POOL_ID!,
+                    userPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID!,
                     tokenUse: "id",
-                    clientId: process.env.CLIENT_ID!,
+                    clientId: process.env.NEXT_PUBLIC_CLIENT_ID!,
                 });
                 try {
                     const payload = await verifier.verify(token.idToken as string);
