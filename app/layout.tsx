@@ -5,6 +5,7 @@ import { ThemeProvider } from "../theme-provider";
 import { AuthModalProvider } from "@/app/contexts/AuthModalContext";
 import AuthModal from "@/app/components/auth/AuthModal";
 import AuthSessionProvider from "./session-provider";
+import { LanguageProvider } from "@/app/contexts/LanguageContext";
 import { CartProvider } from "@/app/contexts/CartContext";
 import CartModal from "@/app/components/cart/CartModal";
 import { PaymentProvider } from "@/app/contexts/PaymentContext";
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </Head>
       <body>
         <AuthSessionProvider>
+          <LanguageProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <AuthModalProvider>
               <CartProvider>
@@ -41,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </CartProvider>
             </AuthModalProvider>
           </ThemeProvider>
+          </LanguageProvider>
         </AuthSessionProvider>
       </body>
     </html>

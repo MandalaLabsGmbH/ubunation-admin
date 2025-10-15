@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import ImageManager from './ImageManager';
 import TiptapEditor from './TiptapEditor'; // Import TiptapEditor
+import Link from 'next/link';
+import { Collectible } from '@/app/collectible';
 
 interface Collectible {
   collectibleId: number;
@@ -100,6 +102,9 @@ export default function CollectibleForm({ language, collectionId, onSave }: Coll
       </div>
       {selectedCollectible && (
         <div className="space-y-4">
+          <div className="py-5">
+          <Link href={`/preview/campaign/${selectedCollectible?.collectibleId}/?lang=${language}`} target='_blank'><button className="w-100 mt-4 bg-orange-500 hover:bg-orange-600 px-8 py-3 font-semibold shadow-lg transition-transform transform hover:scale-105" >Collectible Page Preview</button></Link>
+          </div>
           <div>
             <label className="font-semibold">Name</label>
             <Input value={name} onChange={(e) => setName(e.target.value)} />

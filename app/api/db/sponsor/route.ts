@@ -5,25 +5,30 @@ const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function GET(request: NextRequest) {
     try {
+       
         const { searchParams } = new URL(request.url);
-        const type = searchParams.get("type");
         const collectionId = searchParams.get("collectionId");
 
-        if (!type || !collectionId) {
-            return NextResponse.json({ message: 'Bad Request: type and collectionId are required' }, { status: 400 });
+        // Check if the projectId is provided in the request.
+        if (!collectionId) {
+            return NextResponse.json({ message: 'Bad Request: collectionId must be provided' }, { status: 400 });
         }
 
-        const response = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/Sponsor/getSponsorsByOrganization`, {
-            params: {
-                'sponsor.organization.type': type,
-                'sponsor.organization.collectionId': collectionId
+        // Make the API call to get the project data.
+        const response = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/Sponsor/getSponsorByOrganization`, {
+            params: { 
+                organization: collectionId 
             },
         });
 
+        // Return the successful response data.
         return NextResponse.json(response.data);
 
     } catch (e) {
+        // Log the error for debugging purposes.
         console.error({ e });
+
+        // Handle Axios-specific errors to return a more informative response.
         if (axios.isAxiosError(e)) {
             const err = e as AxiosError;
             return NextResponse.json(
@@ -31,6 +36,8 @@ export async function GET(request: NextRequest) {
                 { status: err.response?.status || 500, statusText: "API call failed" }
             );
         }
+
+        // Handle generic errors.
         return NextResponse.json({ message: 'An internal server error occurred' }, { status: 500 });
     }
 }

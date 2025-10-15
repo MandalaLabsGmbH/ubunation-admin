@@ -8,6 +8,8 @@ import CollectibleForm from '@/app/components/content/CollectibleForm';
 import SponsorForm from '@/app/components/content/SponsorForm';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+
 
 export default function AppContentPage() {
   const { i18n } = useTranslation();
@@ -59,6 +61,7 @@ export default function AppContentPage() {
 
       {language && (
         <>
+          <Link href={`/preview/main/?lang=${language}`} target='_blank'><button className="w-100 mt-4 bg-orange-500 hover:bg-orange-600 px-8 py-3 font-semibold shadow-lg transition-transform transform hover:scale-105" >Main Page Preview</button></Link>
           <CollectionForm
             language={language}
             collections={collections}
