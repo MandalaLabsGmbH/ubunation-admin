@@ -25,6 +25,7 @@
     "@react-three/fiber": "^9.1.2",
     "@stripe/react-stripe-js": "^3.7.0",
     "@stripe/stripe-js": "^7.4.0",
+    "@tiptap/extension-bubble-menu": "^3.7.2",
     "@tiptap/react": "^3.6.5",
     "@tiptap/starter-kit": "^3.6.5",
     "@types/three": "^0.176.0",
