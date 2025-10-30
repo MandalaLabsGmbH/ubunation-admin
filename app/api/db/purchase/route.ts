@@ -13,7 +13,7 @@ type CartItem = {
 // This function fetches all purchases for the logged-in user.
 export async function GET(request: NextRequest) {
     try {
-        const token = await getToken({ req: request, secret: process.env.NEXT_PUBLIC_SECRET });
+        const token = await getToken({ req: request, secret: process.env.NEXT_AUTH_SECRET });
         if (!token?.idToken || !token.email) {
             return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
         }
@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
     try {
-        const token = await getToken({ req: request, secret: process.env.NEXT_PUBLIC_SECRET });
+        const token = await getToken({ req: request, secret: process.env.NEXT_AUTH_SECRET });
         let userId: number = 1; // Default to guest user ID
 
         if (token && token.email && token.idToken) {

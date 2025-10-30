@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
     try {
-        const token = await getToken({ req: request, secret: process.env.NEXT_PUBLIC_SECRET });
+        const token = await getToken({ req: request, secret: process.env.NEXT_AUTH_SECRET });
         if (!token || token.userRole !== 'admin') {
             return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
         }

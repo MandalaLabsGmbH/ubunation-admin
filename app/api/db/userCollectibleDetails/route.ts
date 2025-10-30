@@ -7,7 +7,7 @@ const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 // This function fetches all the necessary details for a single user collectible page.
 export async function GET(request: NextRequest) {
     try {
-        const token = await getToken({ req: request, secret: process.env.NEXT_PUBLIC_SECRET });
+        const token = await getToken({ req: request, secret: process.env.NEXT_AUTH_SECRET });
         if (!token?.idToken) {
             return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
         }

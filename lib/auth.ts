@@ -5,7 +5,7 @@ import { CognitoIdentityProviderClient, InitiateAuthCommand, AuthFlowType } from
 import process from 'process';
 
 export const authOptions: AuthOptions = {
-    secret: process.env.NEXT_PUBLIC_SECRET,
+    secret: process.env.NEXT_AUTH_SECRET,
     providers: [
         CredentialsProvider({
             name: "credentials",
