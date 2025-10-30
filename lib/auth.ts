@@ -19,7 +19,7 @@ export const authOptions: AuthOptions = {
                 if (!credentials) return null;
 
                 const cognito = new CognitoIdentityProviderClient({
-                    region: process.env.COGNITO_REGION,
+                    region: process.env.NEXT_PUBLIC_COGNITO_REGION,
                 });
 
                 const params = {

@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
                 idKey = 'collectibleId';
                 break;
             case 'sponsor':
-                liveEndpoint = '/Sponsor/updateSponsorBySponsorId'; // Assuming this endpoint name
+                liveEndpoint = '/Sponsor/updateSponsorBySponsorId';
                 idKey = 'sponsorId';
                 break;
             default:

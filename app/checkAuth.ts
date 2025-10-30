@@ -5,8 +5,8 @@ import {
     CognitoUserSession
 } from 'amazon-cognito-identity-js';
 
-const poolId = "eu-central-1_flxgJwy19";
-const clientId = "3habrhuviqskit3ma595m5dp0b";
+const poolId = process.env.NEXT_PUBLIC_USER_POOL_ID;
+const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
 
 const poolData = {
   UserPoolId: poolId ? poolId : 'no Cognito poolId found', // Your user pool id here
