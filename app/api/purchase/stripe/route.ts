@@ -6,7 +6,7 @@ const CREATE_PAYMENT_INTENT_URL = process.env.CREATE_PAYMENT_INTENT_LAMBDA_URL;
 
 export async function POST(request: NextRequest) {
     try {
-        const token = await getToken({ req: request, secret: process.env.NEXT_AUTH_SECRET });
+        const token = await getToken({ req: request, secret: process.env.AUTH_SECRET });
         const { cart } = await request.json();
 
         if (!cart || cart.length === 0) {
